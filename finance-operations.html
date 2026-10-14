@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Morrow Finance Operations</title>
+<style>
+:root{--ink:#182A35;--sage:#879B86;--bg:#F7F7F2;--line:#E3E7E5}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#25323A;font:14px -apple-system,BlinkMacSystemFont,Arial,sans-serif}
+header{background:#fff;border-bottom:1px solid var(--line);padding:24px 36px}
+header strong{font-size:25px}
+header a{float:right;color:var(--ink)}
+main{max-width:1400px;margin:auto;padding:30px}
+h1{font-size:30px;margin:0 0 8px}
+p{color:#78838A}
+nav{display:flex;gap:8px;margin:25px 0;flex-wrap:wrap}
+button,input,select{font:inherit;border:1px solid var(--line);border-radius:8px;padding:11px}
+button{cursor:pointer;background:white}
+button.active,button.primary{background:var(--ink);color:white}
+section{background:white;border:1px solid var(--line);padding:24px;border-radius:12px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+label{display:block;margin:12px 0}
+input,select{max-width:100%}
+.field input,.field select{width:100%}
+table{width:100%;border-collapse:collapse;min-width:700px}
+th,td{text-align:left;border-bottom:1px solid var(--line);padding:13px}
+th{font-size:11px;color:#78838A}
+.scroll{overflow:auto}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+#message{margin:16px 0;color:#B95454}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+</style>
+
+<style id="finance-overview-style">
+.finance-intro{
+  background:#182A35;
+  color:white;
+  padding:34px;
+  border-radius:12px;
+  margin-bottom:20px;
+}
+.finance-intro h2{font-size:26px;line-height:1.3}
+.finance-intro p{color:#CBD5D2;max-width:680px;line-height:1.7}
+.eyebrow{color:#B6C8B5;font-size:11px;letter-spacing:2px;font-weight:700}
+.finance-cards{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+  margin:20px 0;
+}
+.finance-card{
+  background:white;
+  border:1px solid #E3E7E5;
+  border-radius:12px;
+  padding:25px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  min-height:310px;
+}
+.finance-icon{
+  color:#879B86;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-bottom:18px;
+}
+.finance-card h3{font-size:19px;margin:0 0 12px}
+.finance-card p{line-height:1.7;flex:1}
+.finance-card strong{font-size:12px;margin:12px 0 18px}
+.finance-card button{width:100%}
+.finance-workflow{
+  background:white;
+  border:1px solid #E3E7E5;
+  padding:28px;
+  border-radius:12px;
+}
+.workflow-steps{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:12px;
+  margin:20px 0;
+}
+.workflow-steps span{
+  padding:12px 15px;
+  background:#E9EDE7;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:600;
+}
+.workflow-steps b{color:#879B86}
+.dashboard-link{color:#182A35;font-weight:700}
+@media(max-width:900px){
+  .finance-cards{grid-template-columns:1fr}
+  .finance-card{min-height:auto}
+}
+</style>
+
+
+<style id="morrow-embed-css">
+body.morrow-embedded > header,
+body.morrow-embedded > main > nav,
+body.morrow-embedded > main > h1,
+body.morrow-embedded > main > p {
+  display:none !important;
+}
+body.morrow-embedded main {
+  padding:0;
+  max-width:none;
+}
+body.morrow-embedded section {
+  border:0;
+  padding:0;
+  background:transparent;
+}
+body.morrow-embedded .finance-intro,
+body.morrow-embedded .finance-workflow {
+  display:none;
+}
+</style>
+<script>
+if(new URLSearchParams(location.search).get("embedded")==="1"){
+  document.addEventListener("DOMContentLoaded",function(){
+    document.body.classList.add("morrow-embedded");
+  });
+}
+</script>
+
+</head>
+<body>
+<header><strong>morrow<span style="color:#879B86">.</span></strong>
+<a href="/">← Back to dashboard</a></header>
+<main>
+<h1>Finance Operations</h1>
+<p>Supplier management · Approval automation · General ledger</p>
+<nav>
+<button onclick="show('overview')" id="tab-overview">Overview</button>
+<button onclick="show('suppliers')" id="tab-suppliers">Suppliers</button>
+<button onclick="show('automation')" id="tab-automation">Automation</button>
+<button onclick="show('accounting')" id="tab-accounting">Accounting</button>
+</nav>
+<div id="message"></div>
+<section id="content"></section>
+</main>
+<script>
+const el=id=>document.getElementById(id);
+const safe=x=>String(x??"").replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+})[c]);
+let current="suppliers";
+let suppliers=[],rules={},journal=[],gl={};
+
+async function api(path,method="GET",data){
+  const r=await fetch("/api/"+path,{
+    method,
+    headers:{"Content-Type":"application/json"},
+    body:data===undefined?undefined:JSON.stringify(data)
+  });
+  const result=await r.json();
+  if(!r.ok)throw Error(result.error||"Request failed");
+  return result;
+}
+
+function message(text){el("message").textContent=text}
+
+async function load(){
+  [suppliers,rules,journal,gl]=await Promise.all([
+    api("suppliers"),api("rules"),api("journal"),api("gl")
+  ]);
+  render();
+}
+
+function show(name){
+  current=name;
+  render();
+}
+
+function render(){
+  for(const name of ["overview","suppliers","automation","accounting"]){
+    el("tab-"+name).classList.toggle("active",current===name);
+  }
+  if(current==="overview")renderFinanceOverview();
+  if(current==="suppliers")renderSuppliers();
+  if(current==="automation")renderAutomation();
+  if(current==="accounting")renderAccounting();
+}
+
+
+function renderFinanceOverview(){
+  el("content").innerHTML=`
+    <div class="finance-intro">
+      <div class="eyebrow">FINANCE WORKSPACE</div>
+      <h2>Manage the complete accounts payable workflow</h2>
+      <p>Control your supplier records, automate invoice reviews,
+      and prepare accounting entries from approved invoices.</p>
+    </div>
+
+    <div class="finance-cards">
+      <article class="finance-card">
+        <div class="finance-icon">01</div>
+        <h3>Supplier Management</h3>
+        <p>Create and maintain vendor records, contact details,
+        expense categories, and payment terms.</p>
+        <strong>${suppliers.length} registered suppliers</strong>
+        <button class="primary" onclick="show('suppliers')">
+          Manage suppliers →
+        </button>
+      </article>
+
+      <article class="finance-card">
+        <div class="finance-icon">02</div>
+        <h3>Approval Automation</h3>
+        <p>Set automatic approval limits, flag duplicate invoices,
+        and define which expenses require manual review.</p>
+        <strong>${rules.autoApprove ? "Automation enabled" : "Manual approval mode"}</strong>
+        <button class="primary" onclick="show('automation')">
+          Configure rules →
+        </button>
+      </article>
+
+      <article class="finance-card">
+        <div class="finance-icon">03</div>
+        <h3>General Ledger</h3>
+        <p>Convert approved invoices into balanced debit and credit
+        entries, then export a CSV for accounting.</p>
+        <strong>${journal.length} journal lines</strong>
+        <button class="primary" onclick="show('accounting')">
+          View accounting →
+        </button>
+      </article>
+    </div>
+
+    <div class="finance-workflow">
+      <h3>How the workflow connects</h3>
+      <div class="workflow-steps">
+        <span>Upload invoice</span>
+        <b>→</b>
+        <span>OCR extraction</span>
+        <b>→</b>
+        <span>Review & approval</span>
+        <b>→</b>
+        <span>General ledger</span>
+        <b>→</b>
+        <span>CSV export</span>
+      </div>
+      <p>Start with invoice processing on the main dashboard.
+      Finance Operations manages the supplier, approval,
+      and accounting settings around that process.</p>
+      <a href="/" class="dashboard-link">Go to invoice dashboard →</a>
+    </div>
+  `;
+}
+
+function renderSuppliers(){
+  el("content").innerHTML=`
+    <h2>Supplier Directory</h2>
+    <div class="grid">
+      <div class="field"><label>Supplier name</label><input id="s-name"></div>
+      <div class="field"><label>Email</label><input id="s-email"></div>
+      <div class="field"><label>Category</label><select id="s-category">
+        ${Object.keys(gl).map(x=>`<option>${safe(x)}</option>`).join("")}
+      </select></div>
+      <div class="field"><label>Payment terms</label>
+        <select id="s-terms"><option>Net 15</option><option selected>Net 30</option><option>Net 45</option><option>Net 60</option></select>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="primary" onclick="saveSupplier()">Save supplier</button>
+      <button onclick="clearSupplier()">Clear</button>
+    </div>
+    <h2 style="margin-top:32px">Registered suppliers (${suppliers.length})</h2>
+    <div class="scroll"><table><thead><tr><th>Name</th><th>Email</th>
+    <th>Category</th><th>Terms</th><th>Actions</th></tr></thead><tbody>
+    ${suppliers.map(x=>`<tr><td>${safe(x.name)}</td><td>${safe(x.email)}</td>
+    <td>${safe(x.category)}</td><td>${safe(x.paymentTerms)}</td>
+    <td><button onclick="editSupplier('${x.id}')">Edit</button>
+    <button onclick="deleteSupplier('${x.id}')">Delete</button></td></tr>`).join("")}
+    </tbody></table></div>`;
+}
+
+let editing=null;
+function editSupplier(id){
+  const x=suppliers.find(x=>x.id===id);
+  if(!x)return;
+  editing=id;
+  el("s-name").value=x.name||"";
+  el("s-email").value=x.email||"";
+  el("s-category").value=x.category||"Other";
+  el("s-terms").value=x.paymentTerms||"Net 30";
+  window.scrollTo(0,0);
+}
+function clearSupplier(){
+  editing=null;
+  for(const id of ["s-name","s-email"])el(id).value="";
+}
+async function saveSupplier(){
+  try{
+    const data={
+      name:el("s-name").value,
+      email:el("s-email").value,
+      category:el("s-category").value,
+      paymentTerms:el("s-terms").value
+    };
+    await api(editing?"suppliers/"+editing:"suppliers",editing?"PATCH":"POST",data);
+    editing=null;
+    message("Supplier saved.");
+    await load();
+  }catch(e){message(e.message)}
+}
+async function deleteSupplier(id){
+  if(!confirm("Delete this supplier?"))return;
+  try{
+    await api("suppliers/"+id,"DELETE");
+    message("Supplier deleted.");
+    await load();
+  }catch(e){message(e.message)}
+}
+
+function renderAutomation(){
+  el("content").innerHTML=`
+    <h2>Approval Rules</h2>
+    <label><input type="checkbox" id="r-auto" ${rules.autoApprove?"checked":""}>
+      Enable automatic approval</label>
+    <label><input type="checkbox" id="r-duplicate" ${rules.blockDuplicates?"checked":""}>
+      Block duplicate invoices</label>
+    <label><input type="checkbox" id="r-valid" ${rules.requireValid?"checked":""}>
+      Require valid invoice fields</label>
+    <div class="grid">
+      <div class="field"><label>Auto-approval maximum (USD)</label>
+        <input type="number" id="r-max" min="0" value="${Number(rules.autoApproveMax)}"></div>
+      <div class="field"><label>Senior approval threshold (USD)</label>
+        <input type="number" id="r-senior" min="0" value="${Number(rules.seniorThreshold)}"></div>
+    </div>
+    <h3>Manual review categories</h3>
+    ${Object.keys(gl).map(x=>`<label><input type="checkbox" class="r-category"
+    value="${safe(x)}" ${(rules.manualCategories||[]).includes(x)?"checked":""}> ${safe(x)}</label>`).join("")}
+    <button class="primary" onclick="saveRules()">Save rules</button>
+    <p>Saved rules are used by the automation evaluation and apply endpoints.
+    Existing approved invoices are not automatically changed.</p>`;
+}
+
+async function saveRules(){
+  try{
+    await api("rules","PATCH",{
+      autoApprove:el("r-auto").checked,
+      blockDuplicates:el("r-duplicate").checked,
+      requireValid:el("r-valid").checked,
+      autoApproveMax:Number(el("r-max").value),
+      seniorThreshold:Number(el("r-senior").value),
+      manualCategories:[...document.querySelectorAll(".r-category:checked")].map(x=>x.value)
+    });
+    message("Automation rules saved.");
+    await load();
+  }catch(e){message(e.message)}
+}
+
+function renderAccounting(){
+  const debit=journal.reduce((s,x)=>s+Number(x.debit||0),0);
+  const credit=journal.reduce((s,x)=>s+Number(x.credit||0),0);
+  el("content").innerHTML=`
+    <h2>General Ledger</h2>
+    <p>Approved invoices only · ${journal.length} journal lines</p>
+    <p>Debit: $${debit.toFixed(2)} · Credit: $${credit.toFixed(2)} ·
+    Difference: $${(debit-credit).toFixed(2)}</p>
+    <button class="primary" onclick="exportCSV()">Export CSV</button>
+    <div class="scroll"><table><thead><tr><th>Invoice</th><th>Supplier</th>
+    <th>Account</th><th>Debit</th><th>Credit</th></tr></thead><tbody>
+    ${journal.map(x=>`<tr><td>${safe(x.invoice)}</td><td>${safe(x.supplier)}</td>
+    <td>${safe(x.account)} · ${safe(x.accountName)}</td>
+    <td>${Number(x.debit||0).toFixed(2)}</td>
+    <td>${Number(x.credit||0).toFixed(2)}</td></tr>`).join("")}
+    </tbody></table></div>`;
+}
+
+function exportCSV(){
+  const keys=["invoice","supplier","date","account","accountName","debit","credit"];
+  const q=x=>'"'+String(x??"").replaceAll('"','""')+'"';
+  const csv=[keys.join(","),...journal.map(x=>keys.map(k=>q(x[k])).join(","))].join("\r\n");
+  const url=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="morrow-general-ledger.csv";
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+load().catch(e=>message(e.message));
+</script>
+
+<script id="morrow-finance-query">
+(function(){
+  const params = new URLSearchParams(location.search);
+  const section = params.get("section");
+  if (!["suppliers","automation","accounting"].includes(section)) return;
+
+  window.addEventListener("load", function(){
+    if (typeof show === "function") show(section);
+  });
+})();
+</script>
+
+<script>
+
+(function () {
+  if (window.__morrowOcrWarningFix) return;
+  window.__morrowOcrWarningFix = true;
+
+  function fix() {
+    const text = /AI configuration:\s*API key required|Configure OPENAI_API_KEY/i;
+
+    const selects = [...document.querySelectorAll('select')];
+    const ocrMode = selects.some(select => {
+      const option = select.options[select.selectedIndex];
+      return option && /OCR\s*\/\s*PDF text only/i.test(option.textContent);
+    });
+
+    if (!ocrMode) return;
+
+    const elements = [...document.querySelectorAll('div, section, aside, p')];
+
+    for (const element of elements) {
+      if (!text.test(element.textContent || '')) continue;
+
+      const childrenContainWarning = [...element.children].some(child =>
+        text.test(child.textContent || '')
+      );
+
+      if (childrenContainWarning) continue;
+
+      let target = element;
+
+      while (
+        target.parentElement &&
+        target.parentElement !== document.body &&
+        target.parentElement.textContent.trim() === target.textContent.trim()
+      ) {
+        target = target.parentElement;
+      }
+
+      target.style.setProperty('display', 'none', 'important');
+    }
+  }
+
+  document.addEventListener('change', fix, true);
+
+  new MutationObserver(fix).observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fix);
+  } else {
+    fix();
+  }
+})();
+
+</script>
+
+<script>
+/* MORROW_OCR_WARNING_REMOVAL_V2 */
+(function () {
+  function removeWarning() {
+    const nodes = document.querySelectorAll(
+      'div, section, aside, article, p, span, small'
+    );
+
+    for (const node of nodes) {
+      const text = (node.textContent || '').trim();
+
+      if (!/AI configuration:\s*API key required/i.test(text)) {
+        continue;
+      }
+
+      // 가장 작은 경고 텍스트 요소부터 찾는다.
+      const nested = [...node.children].some(child =>
+        /AI configuration:\s*API key required/i.test(child.textContent || '')
+      );
+
+      if (nested) continue;
+
+      // 경고 문구를 감싸는 알림 박스까지만 제거한다.
+      let box = node;
+
+      for (let i = 0; i < 4 && box.parentElement; i++) {
+        const parent = box.parentElement;
+        const parentText = (parent.textContent || '').trim();
+
+        if (
+          /Configure OPENAI_API_KEY/i.test(parentText) &&
+          parentText.length < 600
+        ) {
+          box = parent;
+          break;
+        }
+
+        if (parentText.length > 600) break;
+        box = parent;
+      }
+
+      if (box !== document.body && box !== document.documentElement) {
+        box.remove();
+      }
+    }
+  }
+
+  function start() {
+    removeWarning();
+
+    const observer = new MutationObserver(() => {
+      observer.disconnect();
+      removeWarning();
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        characterData: true
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+</script>
+
+
+<script>
+/* MORROW_UPLOAD_BUTTON_FIX_V1 */
+(function () {
+  function repairUpload() {
+    const candidates = [...document.querySelectorAll('button, label, a, span, div')]
+      .filter(el => {
+        const text = (el.textContent || '').trim();
+        return text === '+ Choose document' || text === 'Choose document';
+      });
+
+    for (const target of candidates) {
+      if (target.dataset.morrowUploadFixed) continue;
+
+      const container = target.closest('form') || target.parentElement;
+      if (!container) continue;
+
+      let input = container.querySelector('input[type="file"]');
+
+      if (!input) {
+        input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.pdf,.png,.jpg,.jpeg,.webp';
+        input.style.display = 'none';
+        container.appendChild(input);
+      }
+
+      target.dataset.morrowUploadFixed = '1';
+      target.style.cursor = 'pointer';
+
+      target.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        input.click();
+      }, true);
+
+      input.addEventListener('change', function () {
+        if (!input.files.length) return;
+
+        const file = input.files[0];
+        target.textContent = file.name;
+
+        const originalInputs = [
+          ...document.querySelectorAll('input[type="file"]')
+        ].filter(x => x !== input);
+
+        if (originalInputs.length) {
+          const original = originalInputs[0];
+
+          try {
+            const transfer = new DataTransfer();
+            transfer.items.add(file);
+            original.files = transfer.files;
+            original.dispatchEvent(
+              new Event('change', { bubbles: true })
+            );
+          } catch (e) {
+            console.error('File input synchronization failed:', e);
+          }
+        }
+      });
+    }
+  }
+
+  function start() {
+    repairUpload();
+
+    const observer = new MutationObserver(() => {
+      observer.disconnect();
+      repairUpload();
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+</script>
+
+
+<script>
+/* MORROW_UPLOAD_REPAIR_FINAL */
+(() => {
+  if (window.__morrowUploadRepair) return;
+  window.__morrowUploadRepair = true;
+
+  function isFileLabel(el) {
+    return /^(?:\+\s*)?Choose document$/i.test(
+      (el.textContent || '').trim()
+    );
+  }
+
+  function setup() {
+    const candidates = [...document.querySelectorAll(
+      'button, label, a, span'
+    )].filter(isFileLabel);
+
+    for (const button of candidates) {
+      if (button.dataset.uploadRepair) continue;
+      button.dataset.uploadRepair = '1';
+
+      const region =
+        button.closest('form') ||
+        button.closest('[class*="upload"]') ||
+        button.parentElement?.parentElement ||
+        document.body;
+
+      let fileInput = region.querySelector('input[type="file"]');
+
+      if (!fileInput) {
+        fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.pdf,.png,.jpg,.jpeg,.webp';
+        fileInput.style.position = 'absolute';
+        fileInput.style.width = '1px';
+        fileInput.style.height = '1px';
+        fileInput.style.opacity = '0';
+        region.appendChild(fileInput);
+      }
+
+      button.style.cursor = 'pointer';
+
+      button.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        fileInput.click();
+      }, true);
+
+      fileInput.addEventListener('change', () => {
+        if (!fileInput.files.length) return;
+
+        const file = fileInput.files[0];
+        button.textContent = file.name;
+
+        fileInput.dispatchEvent(
+          new Event('input', { bubbles: true })
+        );
+      });
+    }
+
+    const selectedMode = [...document.querySelectorAll('select')]
+      .some(select => {
+        const option = select.selectedOptions?.[0];
+        return /OCR\s*\/\s*PDF text only/i.test(
+          option?.textContent || ''
+        );
+      });
+
+    if (selectedMode) {
+      const warningNodes = [...document.querySelectorAll(
+        'div, section, aside, p, span'
+      )].filter(el => {
+        const text = (el.textContent || '').trim();
+        return (
+          /AI configuration:\s*API key required/i.test(text) &&
+          text.length < 500
+        );
+      });
+
+      for (const node of warningNodes) {
+        if ([...node.children].some(child =>
+          /AI configuration:\s*API key required/i.test(
+            child.textContent || ''
+          )
+        )) continue;
+
+        let target = node;
+
+        for (let i = 0; i < 3; i++) {
+          const parent = target.parentElement;
+          if (!parent || parent === document.body) break;
+
+          const text = (parent.textContent || '').trim();
+          if (text.length > 500) break;
+
+          target = parent;
+        }
+
+        target.style.display = 'none';
+      }
+    }
+  }
+
+  document.addEventListener('change', setup, true);
+
+  function start() {
+    setup();
+
+    const observer = new MutationObserver(() => {
+      observer.disconnect();
+      setup();
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "morrow-finance-hub",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^1.0.11",
+    "pdfjs-dist": "^3.11.174",
+    "tesseract.js": "^5.1.1"
+  }
+}

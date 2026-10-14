@@ -1,0 +1,20 @@
+.env
+data/
+node_modules/
+.DS_Store
+
+# Dependencies
+node_modules/
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local data and backups
+backups/
+*.log
+.DS_Store
+npm-debug.log*

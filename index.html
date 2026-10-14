@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morrow Finance Hub — Morrow & Co.</title>
+<style>
+:root{
+  --navy:#182A35;
+  --bg:#F7F7F2;
+  --white:#FFFFFF;
+  --sage:#879B86;
+  --sage-soft:#E9EDE7;
+  --amber:#D5A66D;
+  --text:#25323A;
+  --muted:#78838A;
+  --border:#E3E7E5;
+  --green:#3F7D61;
+  --red:#B95454;
+  --blue:#557C95;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-size:13px;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,input:focus-visible,select:focus-visible{
+  outline:2px solid var(--sage);outline-offset:2px
+}
+.topbar{
+  background:white;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+.topbar-main{
+  height:76px;
+  max-width:1600px;
+  margin:auto;
+  padding:0 42px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:13px}
+.brand-logo{
+  width:43px;height:43px;
+  background:var(--navy);
+  color:white;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:-2px;
+}
+.brand-logo span{color:#A8BDA9}
+.brand-name{font-weight:800;letter-spacing:1.4px;font-size:13px}
+.brand-sub{
+  font-size:10px;
+  color:var(--sage);
+  letter-spacing:2px;
+  margin-top:5px;
+  font-weight:700;
+}
+.top-actions{display:flex;align-items:center;gap:17px}
+.workspace-pill{
+  background:#F4F6F2;
+  border:1px solid var(--border);
+  padding:10px 13px;
+  border-radius:8px;
+  color:#64776B;
+  font-size:11px;
+  font-weight:650;
+}
+.icon-button{
+  border:0;background:transparent;
+  width:35px;height:35px;
+  display:grid;place-items:center;
+  border-radius:8px;
+  color:#718188;
+  font-size:19px;
+}
+.icon-button:hover{background:#F2F5F1}
+.avatar{
+  width:36px;height:36px;
+  border-radius:50%;
+  background:#E6EEE5;
+  color:#4F705A;
+  display:grid;
+  place-items:center;
+  font-size:11px;
+  font-weight:800;
+}
+.nav-wrap{border-top:1px solid #F1F3EF}
+.nav{
+  max-width:1600px;
+  margin:auto;
+  padding:0 42px;
+  display:flex;
+  gap:28px;
+  align-items:center;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none}
+.nav button{
+  border:0;
+  background:none;
+  padding:18px 0 16px;
+  white-space:nowrap;
+  font-size:12px;
+  font-weight:650;
+  color:#89969B;
+  border-bottom:2px solid transparent;
+}
+.nav button:hover{color:var(--navy)}
+.nav button.active{
+  color:var(--navy);
+  border-bottom-color:var(--sage);
+}
+.nav-count{
+  background:#F3EEE3;
+  color:#A4783B;
+  font-size:10px;
+  padding:3px 6px;
+  border-radius:5px;
+  margin-left:6px;
+}
+.container{
+  max-width:1600px;
+  padding:36px 42px 55px;
+  margin:auto;
+}
+.page-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  margin-bottom:29px;
+}
+.eyebrow{
+  color:var(--sage);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-bottom:12px;
+}
+h1{
+  font-size:29px;
+  margin:0 0 9px;
+  letter-spacing:-1.1px;
+  font-weight:750;
+}
+h2{font-size:19px;letter-spacing:-.5px}
+h3{font-size:14px;margin:0 0 7px}
+p{margin:0}
+.subtext{color:#8B979B;font-size:12px;line-height:1.7}
+.btn{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:11px 15px;
+  font-size:11px;
+  font-weight:700;
+  color:#526269;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+.btn:hover{background:#F6F8F5}
+.btn.primary{
+  background:var(--navy);
+  border-color:var(--navy);
+  color:white;
+}
+.btn.primary:hover{background:#314A55}
+.btn.sage{
+  background:#78947D;
+  color:white;
+  border-color:#78947D;
+}
+.btn.danger{color:var(--red)}
+.btn.small{padding:8px 11px;font-size:10px}
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:21px;
+}
+.metric{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:23px;
+}
+.metric-label{color:#89969A;font-size:11px}
+.metric-value{
+  font-size:29px;
+  font-weight:750;
+  letter-spacing:-1px;
+  margin:15px 0 8px;
+}
+.metric-foot{color:#A0AAAC;font-size:10px}
+.metric-icon{
+  float:right;
+  background:#EDF2EB;
+  color:#6D8C74;
+  border-radius:8px;
+  padding:8px;
+  font-size:15px;
+}
+.panel{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:12px;
+  margin-bottom:20px;
+  overflow:hidden;
+}
+.panel-head{
+  padding:23px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+}
+.panel-head p{font-size:11px;color:#9BA5A8}
+.grid-2{
+  display:grid;
+  grid-template-columns:1.6fr 1fr;
+  gap:19px;
+}
+.grid-equal{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:19px;
+}
+.tabs{
+  display:flex;
+  align-items:center;
+  gap:25px;
+  border-bottom:1px solid var(--border);
+  padding:0 24px;
+  overflow-x:auto;
+}
+.tabs button{
+  border:0;background:transparent;
+  padding:16px 0;
+  color:#8B989B;
+  border-bottom:2px solid transparent;
+  font-size:11px;
+  font-weight:650;
+  white-space:nowrap;
+}
+.tabs button.active{
+  color:var(--navy);
+  border-bottom-color:var(--navy);
+}
+.tab-number{
+  font-size:10px;
+  background:#EDF1ED;
+  padding:3px 7px;
+  border-radius:6px;
+  margin-left:6px;
+}
+.toolbar{
+  padding:16px 23px;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:9px;
+  border-bottom:1px solid var(--border);
+}
+.search{
+  min-width:220px;
+  flex:1;
+  max-width:350px;
+}
+input,select,textarea{
+  border:1px solid var(--border);
+  background:white;
+  color:var(--text);
+  border-radius:7px;
+  padding:10px 12px;
+  outline:0;
+  font-size:11px;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--sage)}
+.filter{
+  font-size:10px;
+  color:#64747A;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:7px;
+  background:white;
+}
+.table-scroll{overflow-x:auto}
+table{
+  border-collapse:collapse;
+  width:100%;
+  text-align:left;
+}
+th{
+  font-size:10px;
+  color:#96A1A5;
+  background:#FBFCFA;
+  font-weight:700;
+  padding:16px 21px;
+  white-space:nowrap;
+  border-bottom:1px solid var(--border);
+}
+td{
+  padding:15px 21px;
+  border-bottom:1px solid #F0F2EF;
+  color:#647178;
+  font-size:11px;
+  white-space:nowrap;
+}
+tbody tr:hover{background:#FAFCF9}
+tbody tr:last-child td{border-bottom:0}
+tbody tr.clickable{cursor:pointer}
+td strong{color:#2A3A42}
+.vendor{display:flex;align-items:center;gap:11px}
+.vendor-icon{
+  width:34px;height:34px;
+  display:grid;place-items:center;
+  background:#EDF1E9;
+  color:#718C75;
+  font-weight:750;
+  border-radius:9px;
+}
+.badge{
+  display:inline-flex;
+  gap:7px;
+  align-items:center;
+  border-radius:6px;
+  padding:7px 9px;
+  font-size:10px;
+  font-weight:700;
+}
+.badge:before{
+  content:"";
+  width:6px;height:6px;
+  border-radius:50%;
+  background:currentColor;
+}
+.Approved{background:#EAF3EC;color:#3F7D61}
+.ReviewRequired{background:#FBF1E4;color:#A77939}
+.ReadyforApproval{background:#EAF2F7;color:#557C95}
+.Processing{background:#EAF2F7;color:#557C95}
+.Rejected{background:#F9EAEA;color:#B95454}
+.section-footer{
+  padding:16px 23px;
+  color:#98A4A6;
+  font-size:10px;
+  border-top:1px solid var(--border);
+}
+.chart{
+  height:220px;
+  padding:10px 28px 27px;
+  display:flex;
+  gap:23px;
+  align-items:end;
+}
+.chart-item{
+  flex:1;
+  text-align:center;
+  font-size:10px;
+  color:#9CA6A9;
+}
+.chart-bar{
+  background:linear-gradient(180deg,#8DA78F,#DFE8DD);
+  border-radius:7px 7px 0 0;
+  margin-bottom:12px;
+}
+.status-row{
+  display:flex;
+  justify-content:space-between;
+  padding:12px 24px;
+  font-size:11px;
+}
+.progress{
+  height:7px;
+  background:#EEF2ED;
+  border-radius:10px;
+  margin:0 24px 16px;
+  overflow:hidden;
+}
+.progress>div{
+  height:100%;
+  background:var(--sage);
+  border-radius:10px;
+}
+.upload-box{
+  border:1.5px dashed #C8D8C9;
+  background:#FBFDF9;
+  padding:65px 20px;
+  text-align:center;
+  border-radius:11px;
+}
+.upload-box h2{margin:15px 0 10px}
+.upload-box input{display:none}
+.upload-box label{cursor:pointer;margin-top:20px}
+.upload-symbol{
+  font-size:34px;
+  color:var(--sage);
+}
+.notice{
+  background:#EDF4EE;
+  border:1px solid #DAE7DC;
+  color:#55765D;
+  border-radius:9px;
+  padding:17px;
+  margin-top:18px;
+  font-size:11px;
+  line-height:1.8;
+}
+.notice.error{
+  background:#FCF0ED;
+  color:#AC5B4B;
+  border-color:#F0D8D2;
+}
+.workflow-step{
+  display:flex;
+  gap:17px;
+  padding:17px 0;
+  border-bottom:1px solid #F0F2EF;
+}
+.workflow-step:last-child{border-bottom:0}
+.step-no{
+  background:#EDF2EB;
+  color:#6C8A72;
+  border-radius:8px;
+  width:32px;height:32px;
+  display:grid;place-items:center;
+  flex-shrink:0;
+  font-size:10px;
+  font-weight:800;
+}
+.step-body strong{font-size:12px}
+.step-body p{font-size:11px;color:#94A1A3;margin-top:7px;line-height:1.6}
+.rule{
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:20px;
+  margin:13px 0;
+}
+.rule-head{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  align-items:center;
+  margin-bottom:13px;
+}
+.rule-head strong{font-size:12px}
+.rule p{color:#8A999B;font-size:11px;line-height:1.7}
+.rule-tag{
+  background:#EDF3EB;
+  color:#5C8064;
+  padding:6px 9px;
+  border-radius:6px;
+  font-size:10px;
+}
+.rule-tag.off{background:#F0F1EF;color:#929A9C}
+.gl-table select{min-width:150px}
+.empty{padding:45px;text-align:center;color:#9DA8AA}
+.modal{
+  position:fixed;
+  inset:0;
+  background:#14242C88;
+  z-index:50;
+  display:none;
+  justify-content:flex-end;
+}
+.modal.open{display:flex}
+.drawer{
+  width:min(560px,100%);
+  height:100%;
+  background:white;
+  padding:30px;
+  overflow:auto;
+  box-shadow:-15px 0 45px #0002;
+}
+.drawer-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid var(--border);
+  padding-bottom:20px;
+}
+.drawer-head h2{margin:0}
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin:25px 0;
+}
+.field{display:flex;flex-direction:column;gap:8px}
+.field.wide{grid-column:span 2}
+.field label{font-size:11px;color:#708087;font-weight:700}
+.field input{width:100%}
+.issue{
+  background:#FBF1E4;
+  color:#A77939;
+  padding:12px;
+  border-radius:7px;
+  font-size:11px;
+  margin-bottom:8px;
+}
+.actions{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin-top:25px;
+}
+pre{
+  white-space:pre-wrap;
+  word-break:break-word;
+  background:#F6F8F5;
+  padding:15px;
+  border-radius:8px;
+  font-size:11px;
+  max-height:350px;
+  overflow:auto;
+}
+footer{
+  margin-top:35px;
+  color:#A1ACAE;
+  font-size:10px;
+  display:flex;
+  justify-content:space-between;
+}
+@media(max-width:1100px){
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .grid-2,.grid-equal{grid-template-columns:1fr}
+  .nav{gap:20px}
+}
+@media(max-width:700px){
+  .topbar-main{padding:0 17px;height:66px}
+  .nav{padding:0 17px}
+  .container{padding:25px 16px}
+  .workspace-pill{display:none}
+  .page-head{flex-direction:column;align-items:flex-start}
+  .metric{padding:16px}
+  .metric-value{font-size:23px}
+  h1{font-size:25px}
+  .brand-name{font-size:11px}
+  footer{display:block;line-height:2}
+}
+</style>
+</head>
+<body>
+
+<!-- MORROW_FINANCE_TABS_START -->
+<style>
+#mf-tabs {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:14px 32px;
+  background:#FFFFFF;
+  border-bottom:1px solid #E4E8E5;
+  font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;
+}
+#mf-tabs .mf-heading {
+  margin-right:15px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1.4px;
+  color:#879B86;
+}
+#mf-tabs button {
+  background:transparent;
+  border:1px solid transparent;
+  border-radius:8px;
+  padding:11px 17px;
+  color:#46565B;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+}
+#mf-tabs button:hover {
+  background:#F0F3EE;
+}
+#mf-tabs button.selected {
+  background:#182A35;
+  color:white;
+}
+#mf-panel {
+  display:none;
+  max-width:1450px;
+  margin:auto;
+  padding:28px 32px;
+  font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;
+}
+#mf-panel h1 {
+  font-size:29px;
+  color:#182A35;
+  margin:0 0 7px;
+}
+#mf-panel p {
+  color:#71817C;
+  margin:0 0 20px;
+}
+#mf-panel iframe {
+  display:block;
+  width:100%;
+  height:1000px;
+  border:0;
+  background:transparent;
+}
+@media(max-width:700px) {
+  #mf-tabs {padding:10px}
+  #mf-panel {padding:18px 12px}
+}
+</style>
+
+<div id="mf-tabs">
+  <span class="mf-heading">FINANCE HUB</span>
+  <button type="button" data-section="dashboard">Dashboard</button>
+  <button type="button" data-section="suppliers">Suppliers</button>
+  <button type="button" data-section="automation">Approval Rules</button>
+  <button type="button" data-section="accounting">General Ledger</button>
+</div>
+
+<section id="mf-panel">
+  <h1 id="mf-panel-title"></h1>
+  <p id="mf-panel-description"></p>
+  <iframe id="mf-panel-frame" title="Finance management"></iframe>
+</section>
+
+<script id="mf-navigation-controller">
+(function() {
+  const labels = {
+    suppliers: [
+      "Supplier Management",
+      "Manage vendors, payment terms and expense categories."
+    ],
+    automation: [
+      "Approval Rules",
+      "Configure invoice validation and approval limits."
+    ],
+    accounting: [
+      "General Ledger",
+      "Review approved invoice journal entries and export CSV."
+    ]
+  };
+
+  const tabs = document.getElementById("mf-tabs");
+  const panel = document.getElementById("mf-panel");
+  const frame = document.getElementById("mf-panel-frame");
+
+  const hidden = new Map();
+
+  function showOriginal() {
+    hidden.forEach(function(display, element) {
+      element.style.display = display;
+    });
+    hidden.clear();
+  }
+
+  function hideOriginal() {
+    const selectors = [
+      "#main",
+      "#app",
+      "main",
+      "#nav"
+    ];
+
+    selectors.forEach(function(selector) {
+      const element = document.querySelector(selector);
+
+      if (!element) return;
+      if (element === panel) return;
+      if (panel.contains(element)) return;
+      if (tabs.contains(element)) return;
+      if (hidden.has(element)) return;
+
+      hidden.set(element, element.style.display);
+      element.style.display = "none";
+    });
+  }
+
+  function switchTo(section) {
+    tabs.querySelectorAll("button").forEach(function(button) {
+      button.classList.toggle(
+        "selected",
+        button.dataset.section === section
+      );
+    });
+
+    if (section === "dashboard") {
+      panel.style.display = "none";
+      showOriginal();
+      return;
+    }
+
+    if (!labels[section]) return;
+
+    showOriginal();
+    hideOriginal();
+
+    document.getElementById("mf-panel-title").textContent =
+      labels[section][0];
+
+    document.getElementById("mf-panel-description").textContent =
+      labels[section][1];
+
+    panel.style.display = "block";
+
+    const url =
+      "/finance-operations?embedded=1&section=" +
+      encodeURIComponent(section);
+
+    if (frame.getAttribute("src") !== url) {
+      frame.setAttribute("src", url);
+    }
+
+    window.scrollTo(0, 0);
+  }
+
+  tabs.addEventListener("click", function(event) {
+    const button = event.target.closest("button[data-section]");
+    if (!button) return;
+    switchTo(button.dataset.section);
+  });
+
+  switchTo("dashboard");
+})();
+</script>
+<!-- MORROW_FINANCE_TABS_END -->
+
+
+
+
+
+
+
+    </div>
+    <div class="top-actions">
+      <div class="workspace-pill">◈ &nbsp; Internal Workspace</div>
+      <button class="icon-button" title="Notifications"
+        onclick="go('Notifications')">♧</button>
+      <div class="avatar">AM</div>
+    </div>
+  </div>
+  <div class="nav-wrap">
+    <nav class="nav" id="nav"></nav>
+  </div>
+</div>
+
+<main class="container" id="content"></main>
+
+<div class="modal" id="modal">
+  <div class="drawer">
+    <div class="drawer-head">
+      <h2 id="drawerTitle">Invoice details</h2>
+      <button class="btn" onclick="closeDrawer()">✕</button>
+    </div>
+    <div id="drawerBody"></div>
+  </div>
+</div>
+
+<script>
+const NAV=[
+  "Overview","Invoices","AI Processing","Approvals",
+  "Automation","Suppliers","Accounting",
+  "Analytics","AI Benchmark","Audit Logs"
+];
+
+let page="Overview";
+let invoices=[],logs=[],bench=[],config={};
+let selected=null;
+let search="";
+let filter="All";
+let invoiceTab="All";
+let approvalTab="Pending";
+
+const $=id=>document.getElementById(id);
+
+const money=n=>new Intl.NumberFormat("en-US",{
+  style:"currency",
+  currency:"USD",
+  maximumFractionDigits:0
+}).format(Number(n)||0);
+
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",
+  '"':"&quot;","'":"&#39;"
+}[c]));
+
+function badge(status){
+  return `<span class="badge ${esc(status.replaceAll(" ",""))}">
+    ${esc(status)}</span>`;
+}
+
+async function api(url,options={}){
+  const response=await fetch(url,{
+    ...options,
+    headers:{
+      "Content-Type":"application/json",
+      ...(options.headers||{})
+    }
+  });
+  const result=await response.json();
+  if(!response.ok){
+    throw new Error(result.error||"Request failed");
+  }
+  return result;
+}
+
+async function refresh(){
+  [invoices,logs,bench,config]=await Promise.all([
+    api("/api/invoices"),
+    api("/api/audit"),
+    api("/api/benchmark"),
+    api("/api/config")
+  ]);
+  render();
+}
+
+function stats(){
+  return {
+    total:invoices.length,
+    review:invoices.filter(x=>x.status==="Review Required").length,
+    approval:invoices.filter(x=>x.status==="Ready for Approval").length,
+    approved:invoices.filter(x=>x.status==="Approved").length,
+    outstanding:invoices
+      .filter(x=>x.status!=="Approved")
+      .reduce((s,x)=>s+Number(x.amount||0),0)
+  };
+}
+
+function go(name){
+  page=name;
+  search="";
+  filter="All";
+  render();
+  window.scrollTo(0,0);
+}
+
+function navigation(){
+  const pending=stats().approval;
+  $("nav").innerHTML=NAV.map(name=>`
+    <button class="${page===name?"active":""}"
+      onclick="go('${name}')">
+      ${name}
+      ${name==="Approvals"&&pending?
+        `<span class="nav-count">${pending}</span>`:""}
+    </button>
+  `).join("");
+}
+
+function head(kicker,title,description,action=""){
+  return `<div class="page-head">
+    <div>
+      <div class="eyebrow">${kicker}</div>
+      <h1>${title}</h1>
+      <p class="subtext">${description}</p>
+    </div>
+    ${action}
+  </div>`;
+}
+
+function metric(label,value,foot,icon){
+  return `<div class="metric">
+    <span class="metric-icon">${icon}</span>
+    <div class="metric-label">${label}</div>
+    <div class="metric-value">${value}</div>
+    <div class="metric-foot">${foot}</div>
+  </div>`;
+}
+
+function table(rows){
+  return `<div class="table-scroll">
+    <table>
+      <thead><tr>
+        <th>SUPPLIER</th>
+        <th>INVOICE NUMBER</th>
+        <th>INVOICE DATE</th>
+        <th>DUE DATE</th>
+        <th>AMOUNT</th>
+        <th>STATUS</th>
+        <th>AI SOURCE</th>
+      </tr></thead>
+      <tbody>
+      ${rows.map(x=>`
+        <tr class="clickable" onclick="openInvoice('${x.id}')">
+          <td>
+            <div class="vendor">
+              <div class="vendor-icon">${esc(x.supplier[0]||"?")}</div>
+              <strong>${esc(x.supplier)}</strong>
+            </div>
+          </td>
+          <td>${esc(x.number)}</td>
+          <td>${esc(x.invoiceDate||"—")}</td>
+          <td>${esc(x.dueDate||"—")}</td>
+          <td><strong>${money(x.amount)}</strong></td>
+          <td>${badge(x.status)}</td>
+          <td>${esc(x.source)}</td>
+        </tr>
+      `).join("")}
+      </tbody>
+    </table>
+    ${rows.length?"":'<div class="empty">No invoices found.</div>'}
+  </div>`;
+}
+
+function overview(){
+  const s=stats();
+  const trend=[38,46,42,62,54,75];
+
+  return head(
+    "FINANCIAL OPERATIONS",
+    "Finance overview",
+    "A clear view of Morrow & Co.'s accounts payable operations.",
+    `<button class="btn primary" onclick="go('AI Processing')">
+      ＋ &nbsp; New invoice
+    </button>`
+  )+
+  `<div class="metrics">
+    ${metric("Total invoices",s.total,"All recorded invoices","▤")}
+    ${metric("Pending review",s.review,"Requires verification","◷")}
+    ${metric("Awaiting approval",s.approval,"Manager action required","✓")}
+    ${metric("Outstanding value",money(s.outstanding),"Not yet approved","＄")}
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head">
+        <div><h3>Invoice activity</h3>
+        <p>Illustrative volume trend · Demo</p></div>
+        <span class="btn small">Last 6 months</span>
+      </div>
+      <div class="chart">
+        ${trend.map((n,i)=>`
+          <div class="chart-item">
+            <div class="chart-bar" style="height:${n*2.2}px"></div>
+            ${["May","Jun","Jul","Aug","Sep","Oct"][i]}
+          </div>
+        `).join("")}
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div><h3>Invoice status</h3>
+        <p>Current processing breakdown</p></div>
+      </div>
+      ${[
+        ["Approved",s.approved],
+        ["Review required",s.review],
+        ["Awaiting approval",s.approval]
+      ].map(([label,count])=>`
+        <div class="status-row">
+          <span>${label}</span><strong>${count}</strong>
+        </div>
+        <div class="progress">
+          <div style="width:${s.total?count/s.total*100:0}%"></div>
+        </div>
+      `).join("")}
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div><h3>Recent invoices</h3>
+      <p>Latest supplier billing activity</p></div>
+      <button class="btn small" onclick="go('Invoices')">
+        View all →
+      </button>
+    </div>
+    ${table(invoices.slice(0,7))}
+  </div>`;
+}
+
+function invoicePage(){
+  const counts={
+    All:invoices.length,
+    "Review Required":invoices.filter(x=>x.status==="Review Required").length,
+    "Ready for Approval":invoices.filter(x=>x.status==="Ready for Approval").length,
+    Approved:invoices.filter(x=>x.status==="Approved").length
+  };
+
+  const tabs=[
+    ["All","All invoices"],
+    ["Review Required","Needs review"],
+    ["Ready for Approval","Awaiting approval"],
+    ["Approved","Approved"]
+  ];
+
+  return head(
+    "ACCOUNTS PAYABLE",
+    "Invoice management",
+    "Review, validate and manage all supplier invoices.",
+    `<button class="btn primary" onclick="go('AI Processing')">
+      ＋ &nbsp; Add invoice
+    </button>`
+  )+
+  `<div class="panel">
+    <div class="tabs">
+      ${tabs.map(([value,label])=>`
+        <button class="${invoiceTab===value?"active":""}"
+          onclick="invoiceTab='${value}';render()">
+          ${label}
+          <span class="tab-number">${counts[value]}</span>
+        </button>
+      `).join("")}
+    </div>
+
+    <div class="toolbar">
+      <input class="search" placeholder="⌕  Search invoices or suppliers"
+        value="${esc(search)}"
+        oninput="search=this.value;updateInvoiceTable()">
+
+      <select class="filter" onchange="filter=this.value;updateInvoiceTable()">
+        ${["All","Demo","Vision LLM"].map(x=>`
+          <option ${filter===x?"selected":""}>${x}</option>
+        `).join("")}
+      </select>
+
+      <button class="btn small" onclick="exportData('csv')">
+        ↓ Export CSV
+      </button>
+      <button class="btn small" onclick="exportData('json')">
+        Export JSON
+      </button>
+    </div>
+
+    <div id="invoiceTable"></div>
+    <div class="section-footer">
+      Select an invoice to review its fields and approval status.
+    </div>
+  </div>`;
+}
+
+function filteredInvoices(){
+  return invoices.filter(x=>{
+    const q=(x.supplier+" "+x.number).toLowerCase();
+    return q.includes(search.toLowerCase()) &&
+      (invoiceTab==="All"||x.status===invoiceTab) &&
+      (filter==="All"||x.source===filter);
+  });
+}
+
+function updateInvoiceTable(){
+  const target=$("invoiceTable");
+  if(target)target.innerHTML=table(filteredInvoices());
+}
+
+function processing(){
+  return head(
+    "DOCUMENT INTELLIGENCE",
+    "AI document processing",
+    "Extract structured invoice fields using Vision LLM."
+  )+
+  `<div class="grid-equal">
+    <div class="panel" style="padding:26px">
+      <div class="upload-box">
+        <div class="upload-symbol">✧</div>
+        <h2>Upload supplier invoice</h2>
+        <p class="subtext">
+          PDF, PNG or JPG · Maximum 10 MB
+        </p>
+        
+<div style="margin-top:18px">
+  <input
+    id="morrow-real-file-upload"
+    type="file"
+    accept=".pdf,.png,.jpg,.jpeg"
+    onchange="upload(this)"
+    style="
+      display:block;
+      width:100%;
+      max-width:380px;
+      padding:15px;
+      background:#ffffff;
+      color:#192c37;
+      border:2px solid #879c8b;
+      border-radius:10px;
+      cursor:pointer;
+    "
+  >
+</div>
+
+      </div>
+      <div id="uploadStatus"></div>
+    </div>
+
+    <div class="panel" style="padding:27px">
+      <h3>AI extraction pipeline</h3>
+      ${[
+        ["01","Document upload","Read invoice PDF or image."],
+        ["02","Vision LLM","Extract structured invoice information."],
+        ["03","Validation","Check required fields and duplicates."],
+        ["04","Human review","Correct extracted accounting fields."],
+        ["05","Approval","Submit verified data for authorization."]
+      ].map(([n,title,desc])=>`
+        <div class="workflow-step">
+          <div class="step-no">${n}</div>
+          <div class="step-body">
+            <strong>${title}</strong>
+            <p>${desc}</p>
+          </div>
+        </div>
+      `).join("")}
+    </div>
+  </div>
+
+  <div class="notice ${config.aiConfigured?"":"error"}">
+    <strong>AI configuration:
+      ${config.aiConfigured?"Connected":"API key required"}
+    </strong>
+    <div>
+      ${config.aiConfigured?
+        "Vision LLM extraction is available.":
+        "Configure OPENAI_API_KEY in .env and restart the server."}
+    </div>
+  </div>`;
+}
+
+async function upload(input){
+  const file=input.files[0];
+  if(!file)return;
+  const target=$("uploadStatus");
+  target.innerHTML='<div class="notice">Processing invoice with AI...</div>';
+
+  try{
+    if(file.size>10*1024*1024)throw Error("Maximum 10 MB");
+
+    const base64=await new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(String(reader.result).split(",")[1]);
+      reader.onerror=reject;
+      reader.readAsDataURL(file);
+    });
+
+    const result=await api("/api/extract",{
+      method:"POST",
+      body:JSON.stringify({
+        name:file.name,
+        mime:file.type,
+        base64
+      })
+    });
+
+    await refresh();
+    page="Invoices";
+    invoiceTab="All";
+    render();
+    openInvoice(result.invoice.id);
+  }catch(error){
+    target.innerHTML=`<div class="notice error">${esc(error.message)}</div>`;
+  }
+}
+
+function approvals(){
+  const s=stats();
+  const rows=invoices.filter(x=>
+    approvalTab==="Pending"
+      ? x.status==="Ready for Approval"
+      : x.status==="Approved"
+  );
+
+  return head(
+    "APPROVAL WORKFLOW",
+    "Approval center",
+    "Review and authorize supplier invoice payments."
+  )+
+  `<div class="metrics">
+    ${metric("Awaiting approval",s.approval,"Requires action","◷")}
+    ${metric("Approved invoices",s.approved,"Authorized records","✓")}
+  </div>
+  <div class="panel">
+    <div class="tabs">
+      ${["Pending","Approved"].map(t=>`
+        <button class="${approvalTab===t?"active":""}"
+          onclick="approvalTab='${t}';render()">
+          ${t}
+        </button>
+      `).join("")}
+    </div>
+    ${table(rows)}
+  </div>`;
+}
+
+function automation(){
+  const rules=[
+    ["High-value invoice approval",
+      "Invoice total exceeds $5,000",
+      "Require Finance Manager approval"],
+    ["Missing invoice information",
+      "Supplier, invoice number or total is missing",
+      "Flag document for manual review"],
+    ["Duplicate invoice detection",
+      "Supplier and invoice number match existing record",
+      "Block approval submission"],
+    ["New supplier verification",
+      "Supplier has no prior invoice history",
+      "Recommend additional verification"]
+  ];
+
+  return head(
+    "WORKFLOW INTELLIGENCE",
+    "Automation rules",
+    "Define how invoices are validated and routed through finance operations."
+  )+
+  `<div class="notice">
+    This page displays the proposed rule configuration.
+    Missing-field and duplicate checks are implemented in the API.
+    Configurable routing rules are not active yet.
+  </div>
+  <div class="grid-equal" style="margin-top:20px">
+    <div class="panel" style="padding:25px">
+      <h3>Rule configuration</h3>
+      ${rules.map(([name,condition,action],i)=>`
+        <div class="rule">
+          <div class="rule-head">
+            <strong>${name}</strong>
+            <span class="rule-tag ${i===0||i===3?"off":""}">
+              ${i===0||i===3?"Planned":"Active validation"}
+            </span>
+          </div>
+          <p><strong>IF</strong> ${condition}</p>
+          <p><strong>THEN</strong> ${action}</p>
+        </div>
+      `).join("")}
+    </div>
+    <div class="panel" style="padding:25px">
+      <h3>Workflow architecture</h3>
+      ${[
+        ["01","Invoice received"],
+        ["02","AI field extraction"],
+        ["03","Automated validation"],
+        ["04","Human verification"],
+        ["05","Approval decision"],
+        ["06","Accounting export"]
+      ].map(([n,title])=>`
+        <div class="workflow-step">
+          <div class="step-no">${n}</div>
+          <div class="step-body"><strong>${title}</strong></div>
+        </div>
+      `).join("")}
+    </div>
+  </div>`;
+}
+
+function suppliers(){
+  const map=new Map();
+
+  invoices.forEach(x=>{
+    const existing=map.get(x.supplier)||{count:0,total:0};
+    existing.count++;
+    existing.total+=Number(x.amount||0);
+    map.set(x.supplier,existing);
+  });
+
+  return head(
+    "VENDOR DIRECTORY",
+    "Suppliers",
+    "Monitor supplier relationships and invoice spending."
+  )+
+  `<div class="panel">
+    <div class="panel-head">
+      <div><h3>Supplier directory</h3>
+      <p>${map.size} suppliers from invoice records</p></div>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead><tr>
+          <th>SUPPLIER</th><th>INVOICES</th><th>TOTAL BILLED</th>
+        </tr></thead>
+        <tbody>
+          ${[...map.entries()].map(([name,v])=>`
+            <tr>
+              <td><strong>${esc(name)}</strong></td>
+              <td>${v.count}</td>
+              <td><strong>${money(v.total)}</strong></td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function accounting(){
+  const categories=[
+    ["Packaging","6100","Packaging & Materials"],
+    ["Logistics","6200","Freight & Shipping"],
+    ["Marketing","6300","Advertising & Marketing"],
+    ["Software","6400","Software Subscriptions"],
+    ["Manufacturing","6500","Cost of Goods Sold"],
+    ["Professional Services","6600","Professional Fees"]
+  ];
+
+  return head(
+    "GENERAL LEDGER",
+    "Accounting & GL",
+    "Map supplier costs to accounting categories."
+  )+
+  `<div class="notice">
+    GL mapping below is an illustrative chart of accounts.
+    AI-powered account recommendations and persistent mapping
+    configuration are planned for the next development stage.
+  </div>
+  <div class="panel" style="margin-top:20px">
+    <div class="panel-head">
+      <div><h3>Chart of accounts</h3>
+      <p>Example expense account mapping</p></div>
+    </div>
+    <div class="table-scroll">
+      <table class="gl-table">
+        <thead><tr>
+          <th>EXPENSE CATEGORY</th>
+          <th>GL CODE</th>
+          <th>ACCOUNT NAME</th>
+          <th>STATUS</th>
+        </tr></thead>
+        <tbody>
+          ${categories.map(([cat,code,name])=>`
+            <tr>
+              <td><strong>${cat}</strong></td>
+              <td>${code}</td>
+              <td>${name}</td>
+              <td><span class="rule-tag off">Example</span></td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function analytics(){
+  const map=new Map();
+
+  invoices.forEach(x=>{
+    map.set(
+      x.supplier,
+      (map.get(x.supplier)||0)+Number(x.amount||0)
+    );
+  });
+
+  const arr=[...map.entries()].sort((a,b)=>b[1]-a[1]);
+  const max=arr[0]?.[1]||1;
+
+  return head(
+    "FINANCIAL INSIGHTS",
+    "Spend analytics",
+    "Analyze supplier expenditure and billing patterns."
+  )+
+  `<div class="metrics">
+    ${metric(
+      "Total billed",
+      money(invoices.reduce((s,x)=>s+Number(x.amount||0),0)),
+      "Across all invoices","＄"
+    )}
+    ${metric("Suppliers",map.size,"Active billing relationships","▣")}
+  </div>
+  <div class="panel" style="padding:26px">
+    <h3>Supplier spending</h3>
+    ${arr.map(([name,value])=>`
+      <div style="margin-top:24px">
+        <div style="display:flex;justify-content:space-between;
+          margin-bottom:11px;font-size:11px">
+          <strong>${esc(name)}</strong>
+          <strong>${money(value)}</strong>
+        </div>
+        <div class="progress" style="margin:0">
+          <div style="width:${value/max*100}%"></div>
+        </div>
+      </div>
+    `).join("")}
+  </div>`;
+}
+
+function benchmark(){
+  const avg=bench.length?
+    Math.round(bench.reduce((s,x)=>s+x.latencyMs,0)/bench.length):0;
+
+  return head(
+    "AI ENGINEERING",
+    "AI benchmark",
+    "Measure extraction performance without fabricated results."
+  )+
+  `<div class="metrics">
+    ${metric("AI extraction runs",bench.length,"Recorded requests","◈")}
+    ${metric("Average latency",bench.length?avg+" ms":"—",
+      "Measured processing time","◷")}
+  </div>
+  <div class="panel">
+    <div class="panel-head">
+      <div><h3>Extraction history</h3>
+      <p>Actual API usage measurements</p></div>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead><tr>
+          <th>MODEL</th><th>LATENCY</th>
+          <th>INPUT TOKENS</th><th>OUTPUT TOKENS</th><th>DATE</th>
+        </tr></thead>
+        <tbody>
+          ${bench.map(x=>`
+            <tr>
+              <td><strong>${esc(x.model)}</strong></td>
+              <td>${x.latencyMs} ms</td>
+              <td>${x.inputTokens??"—"}</td>
+              <td>${x.outputTokens??"—"}</td>
+              <td>${esc(x.timestamp.slice(0,10))}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+      ${bench.length?"":'<div class="empty">No AI runs yet.</div>'}
+    </div>
+  </div>
+  <div class="notice">
+    Field accuracy, precision, recall and F1 require labeled
+    ground-truth invoices. OCR-only and hybrid evaluation
+    pipelines have not yet been implemented.
+  </div>`;
+}
+
+function auditPage(){
+  return head(
+    "ACTIVITY TRACKING",
+    "Audit logs",
+    "Review recorded invoice actions and workflow transitions."
+  )+
+  `<div class="panel">
+    <div class="table-scroll">
+      <table>
+        <thead><tr>
+          <th>EVENT</th><th>INVOICE ID</th><th>TIMESTAMP</th>
+        </tr></thead>
+        <tbody>
+          ${logs.map(x=>`
+            <tr>
+              <td><strong>${esc(x.action)}</strong></td>
+              <td>${esc(x.invoiceId.slice(0,8))}</td>
+              <td>${esc(x.timestamp)}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+      ${logs.length?"":'<div class="empty">No activity recorded.</div>'}
+    </div>
+  </div>`;
+}
+
+function render(){
+  navigation();
+
+  const pages={
+    "Overview":overview,
+    "Invoices":invoicePage,
+    "AI Processing":processing,
+    "Approvals":approvals,
+    "Automation":automation,
+    "Suppliers":suppliers,
+    "Accounting":accounting,
+    "Analytics":analytics,
+    "AI Benchmark":benchmark,
+    "Audit Logs":auditPage
+  };
+
+  $("content").innerHTML=(pages[page]||overview)()+
+    `<footer>
+      <span>© 2026 Morrow & Co. · Finance Hub</span>
+      <span>Internal Finance Operations · Fictional portfolio demo</span>
+    </footer>`;
+
+  if(page==="Invoices")updateInvoiceTable();
+}
+
+function openInvoice(id){
+  selected=invoices.find(x=>x.id===id);
+  if(!selected)return;
+
+  const x=selected;
+  $("drawerTitle").textContent=x.number;
+
+  const fields=[
+    ["Supplier","supplier"],
+    ["Invoice number","number"],
+    ["Invoice date","invoiceDate"],
+    ["Due date","dueDate"],
+    ["Amount (USD)","amount"],
+    ["Currency","currency"]
+  ];
+
+  $("drawerBody").innerHTML=`
+    <div style="margin-top:25px">${badge(x.status)}</div>
+    <p class="subtext" style="margin-top:14px">
+      ${esc(x.source)} · ${esc(x.filename||"Demo record")}
+    </p>
+
+    <div class="form-grid">
+      ${fields.map(([label,key])=>`
+        <div class="field ${key==="supplier"?"wide":""}">
+          <label>${label}</label>
+          <input id="field_${key}" value="${esc(x[key])}"
+            ${x.status==="Approved"?"disabled":""}>
+        </div>
+      `).join("")}
+    </div>
+
+    ${(x.issues||[]).map(issue=>`
+      <div class="issue">⚠ ${esc(issue)}</div>
+    `).join("")}
+
+    ${x.extraction?`
+      <h3>AI extraction result</h3>
+      <pre>${esc(JSON.stringify(x.extraction,null,2))}</pre>
+    `:""}
+
+    <div class="notice">
+      Verify invoice information against the original document
+      before submitting for approval.
+    </div>
+
+    <div class="actions">
+      ${x.status!=="Approved"?
+        `<button class="btn" onclick="saveInvoice()">Save changes</button>`:""}
+
+      ${x.status==="Review Required"?
+        `<button class="btn primary" onclick="workflow('submit')">
+          Submit for approval
+        </button>`:""}
+
+      ${x.status==="Ready for Approval"?
+        `<button class="btn danger" onclick="workflow('reject')">
+          Reject
+        </button>
+        <button class="btn primary" onclick="workflow('approve')">
+          Approve invoice
+        </button>`:""}
+
+      ${x.status==="Rejected"?
+        `<button class="btn primary" onclick="workflow('reopen')">
+          Reopen review
+        </button>`:""}
+    </div>
+  `;
+
+  $("modal").classList.add("open");
+}
+
+function closeDrawer(){
+  $("modal").classList.remove("open");
+  selected=null;
+}
+
+async function saveInvoice(){
+  if(!selected)return;
+
+  const data={};
+
+  [
+    "supplier","number","invoiceDate",
+    "dueDate","amount","currency"
+  ].forEach(key=>{
+    data[key]=$("field_"+key).value;
+  });
+
+  try{
+    const id=selected.id;
+    await api("/api/invoices/"+id,{
+      method:"PATCH",
+      body:JSON.stringify(data)
+    });
+    await refresh();
+    openInvoice(id);
+  }catch(error){
+    alert(error.message);
+  }
+}
+
+async function workflow(action){
+  if(!selected)return;
+
+  try{
+    const id=selected.id;
+    await api("/api/workflow/"+id,{
+      method:"POST",
+      body:JSON.stringify({action})
+    });
+    await refresh();
+    openInvoice(id);
+  }catch(error){
+    alert(error.message);
+  }
+}
+
+function exportData(format){
+  const approved=invoices.filter(x=>x.status==="Approved");
+
+  if(!approved.length){
+    alert("No approved invoices available.");
+    return;
+  }
+
+  const fields=[
+    "supplier","number","invoiceDate",
+    "dueDate","amount","currency"
+  ];
+
+  let content,mime;
+
+  if(format==="json"){
+    content=JSON.stringify(approved.map(x=>
+      Object.fromEntries(fields.map(key=>[key,x[key]]))
+    ),null,2);
+    mime="application/json";
+  }else{
+    const quote=v=>'"'+String(v??"").replaceAll('"','""')+'"';
+    content=[
+      fields.join(","),
+      ...approved.map(x=>fields.map(k=>quote(x[k])).join(","))
+    ].join("\n");
+    mime="text/csv";
+  }
+
+  const url=URL.createObjectURL(new Blob([content],{type:mime}));
+  const link=document.createElement("a");
+  link.href=url;
+  link.download="morrow-approved-invoices."+format;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+try { render(); } catch(e) { console.error(e); }
+refresh().catch(error=>{
+  $("content").innerHTML=
+    `<div class="notice error">${esc(error.message)}</div>`;
+});
+
+window.morrowGetState = () => ({invoices,page});
+</script>
+<script src="/morrow-ui.js"></script>
+
+
+<script>
+
+(function () {
+  if (window.__morrowOcrWarningFix) return;
+  window.__morrowOcrWarningFix = true;
+
+  function fix() {
+    const text = /AI configuration:\s*API key required|Configure OPENAI_API_KEY/i;
+
+    const selects = [...document.querySelectorAll('select')];
+    const ocrMode = selects.some(select => {
+      const option = select.options[select.selectedIndex];
+      return option && /OCR\s*\/\s*PDF text only/i.test(option.textContent);
+    });
+
+    if (!ocrMode) return;
+
+    const elements = [...document.querySelectorAll('div, section, aside, p')];
+
+    for (const element of elements) {
+      if (!text.test(element.textContent || '')) continue;
+
+      const childrenContainWarning = [...element.children].some(child =>
+        text.test(child.textContent || '')
+      );
+
+      if (childrenContainWarning) continue;
+
+      let target = element;
+
+      while (
+        target.parentElement &&
+        target.parentElement !== document.body &&
+        target.parentElement.textContent.trim() === target.textContent.trim()
+      ) {
+        target = target.parentElement;
+      }
+
+      target.style.setProperty('display', 'none', 'important');
+    }
+  }
+
+  document.addEventListener('change', fix, true);
+
+  new MutationObserver(fix).observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fix);
+  } else {
+    fix();
+  }
+})();
+
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Morrow Finance Hub</title>
+<style>
+:root{
+  --navy:#182A35;--bg:#F7F7F2;--white:#FFFFFF;
+  --sage:#879B86;--soft:#E9EDE7;--amber:#D5A66D;
+  --text:#25323A;--muted:#78838A;--border:#E3E7E5;
+  --green:#3F7D61;--red:#B95454;--blue:#557C95
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.shell{display:flex;min-height:100vh}
+aside{width:252px;background:var(--navy);color:#fff;
+padding:30px 16px;display:flex;flex-direction:column;
+position:sticky;top:0;height:100vh;flex-shrink:0}
+.brand{display:flex;gap:12px;align-items:center;padding:0 12px 32px}
+.mark{width:42px;height:42px;background:#F3F5EF;
+border-radius:11px;display:grid;place-items:center;
+color:var(--navy);font-size:25px;font-weight:800}
+.brand strong{font-size:13px;letter-spacing:1.5px}
+.brand small{display:block;font-size:10px;letter-spacing:2px;
+color:#9AADB1;margin-top:5px}
+.workspace{background:#2D414C;border:1px solid #40535C;
+padding:15px;border-radius:10px;margin-bottom:32px;font-size:12px}
+.workspace small{display:block;color:#A3B5B8;margin-top:5px}
+.nav-title{font-size:10px;color:#8BA1A8;letter-spacing:1.6px;
+margin:0 14px 12px}
+nav{display:grid;gap:5px}
+nav button{border:0;background:transparent;color:#B3C0C4;
+padding:14px;border-radius:9px;text-align:left;display:flex;
+gap:13px;align-items:center;font-size:12px}
+nav button:hover{background:#2C414B}
+nav button.active{background:#405A59;color:#fff;font-weight:700}
+.nav-icon{font-size:16px;width:19px}
+.sidebar-foot{margin-top:auto;border-top:1px solid #40515A;
+padding:23px 12px 0;color:#A4B5B9;font-size:11px}
+.sidebar-foot strong{display:block;color:white;margin-top:15px}
+main{flex:1;min-width:0}
+header{height:75px;background:white;border-bottom:1px solid var(--border);
+display:flex;align-items:center;justify-content:space-between;padding:0 42px}
+.crumb{font-size:12px;color:#9CA6A9}
+.crumb strong{color:var(--text)}
+.profile{display:flex;gap:18px;align-items:center;color:#859296;font-size:12px}
+.circle{width:35px;height:35px;border-radius:50%;
+background:#E5EDE5;color:#51735A;display:grid;place-items:center;
+font-size:11px;font-weight:700}
+.content{padding:38px 42px;max-width:1550px;margin:auto}
+.eyebrow{font-size:10px;letter-spacing:2px;font-weight:800;
+color:var(--sage);margin-bottom:12px}
+h1{font-size:31px;letter-spacing:-1.2px;margin:0 0 9px}
+.subtitle{color:#89969A;font-size:13px;margin:0}
+.heading{display:flex;align-items:center;justify-content:space-between;
+gap:20px;margin-bottom:30px}
+.btn{border:1px solid var(--border);background:white;color:var(--text);
+border-radius:9px;padding:12px 17px;font-weight:650;font-size:12px}
+.btn.primary{background:var(--navy);color:white;border-color:var(--navy)}
+.btn:hover{opacity:.85}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+gap:17px;margin-bottom:22px}
+.metric,.panel{background:white;border:1px solid var(--border);border-radius:13px}
+.metric{padding:23px}
+.metric-label{color:#7F8B90;font-size:12px}
+.metric-value{font-size:29px;letter-spacing:-1px;font-weight:750;margin:17px 0 8px}
+.metric-note{font-size:11px;color:#9BA6A8}
+.metric-symbol{float:right;color:#8FA993;background:#EFF3EC;
+border-radius:8px;padding:8px}
+.panel{overflow:hidden;margin-bottom:20px}
+.panel-head{padding:23px 25px;display:flex;align-items:center;
+justify-content:space-between}
+.panel-head h3{font-size:14px;margin:0 0 7px}
+.panel-head p{font-size:11px;color:#9AA5A7;margin:0}
+.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:20px}
+.chart{height:210px;display:flex;gap:20px;align-items:end;
+padding:20px 30px 30px}
+.bar-col{flex:1;text-align:center;font-size:11px;color:#98A4A6}
+.bar{background:linear-gradient(180deg,#9FB3A0,#DDE6DA);
+border-radius:7px 7px 0 0;margin-bottom:10px}
+.status-line{padding:13px 25px;display:flex;justify-content:space-between;
+align-items:center;font-size:12px}
+.status-line b{font-size:13px}
+.progress{height:9px;background:#EFF2ED;border-radius:20px;
+overflow:hidden;margin:5px 25px 24px}
+.progress>div{height:100%;background:var(--sage)}
+table{width:100%;border-collapse:collapse;text-align:left}
+th{font-size:10px;letter-spacing:1px;color:#95A0A3;
+background:#FAFBF8;padding:16px 23px}
+td{padding:17px 23px;border-top:1px solid #F0F2EF;
+font-size:12px;color:#627078}
+td strong{color:#273840}
+tr.clickable{cursor:pointer}
+tr.clickable:hover{background:#FAFCF8}
+.vendor{display:flex;align-items:center;gap:12px}
+.vendor-icon{width:34px;height:34px;border-radius:9px;
+background:#EEF2E9;color:#6B876F;display:grid;place-items:center;
+font-weight:700}
+.badge{display:inline-flex;align-items:center;gap:7px;
+border-radius:7px;padding:7px 10px;font-size:10px;font-weight:700}
+.badge:before{content:"";width:6px;height:6px;
+background:currentColor;border-radius:50%}
+.Approved{background:#E9F3EC;color:var(--green)}
+.ReviewRequired{background:#FBF1E3;color:#A77733}
+.ReadyforApproval{background:#EAF2F7;color:var(--blue)}
+.Rejected{background:#FAE9E9;color:var(--red)}
+.Processing{background:#EAF2F7;color:var(--blue)}
+.toolbar{padding:20px;display:flex;gap:10px;flex-wrap:wrap}
+input,select{border:1px solid var(--border);border-radius:8px;
+padding:12px;background:white;outline:none;color:var(--text)}
+input:focus{border-color:var(--sage)}
+.search{flex:1;min-width:200px}
+.upload{border:2px dashed #C8D7C8;border-radius:12px;
+background:#FAFCF9;padding:65px 20px;text-align:center}
+.upload-icon{font-size:35px;color:#7D9D82}
+.upload h2{margin:17px 0 10px;font-size:20px}
+.upload p{color:#8C999B;font-size:12px}
+.upload input{display:none}
+.upload label{display:inline-block;margin-top:17px;cursor:pointer}
+.notice{background:#EFF4EF;border:1px solid #DDE8DF;
+padding:19px;border-radius:10px;color:#56755E;font-size:12px;
+line-height:1.8;margin-top:18px}
+.notice.error{background:#FDF0EE;border-color:#F3D9D5;color:#A95147}
+.detail{position:fixed;inset:0;background:#14242C88;z-index:10;
+display:none;justify-content:flex-end}
+.detail.open{display:flex}
+.drawer{width:min(540px,100%);background:white;height:100%;
+overflow:auto;box-shadow:-10px 0 40px #0002;padding:30px}
+.drawer-top{display:flex;justify-content:space-between;align-items:center;
+border-bottom:1px solid var(--border);padding-bottom:22px}
+.drawer-top h2{margin:0}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:25px}
+.field{display:grid;gap:8px}
+.field.wide{grid-column:span 2}
+.field label{font-size:11px;font-weight:650;color:#708087}
+.field input{width:100%}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:25px}
+.issue{color:#A77733;background:#FBF1E3;padding:11px;
+border-radius:7px;margin-top:9px;font-size:11px}
+pre{white-space:pre-wrap;word-break:break-word;background:#F6F8F5;
+padding:16px;border-radius:8px;font-size:11px}
+.empty{padding:40px;text-align:center;color:#9CA7AA}
+.footer{font-size:10px;color:#A4ADAF;margin-top:32px;
+display:flex;justify-content:space-between}
+@media(max-width:1000px){
+aside{width:205px}.content{padding:26px}.metrics{grid-template-columns:repeat(2,1fr)}
+.grid{grid-template-columns:1fr}header{padding:0 25px}}
+@media(max-width:650px){
+aside{display:none}.content{padding:20px}header{padding:0 20px}
+.metrics{gap:10px}.metric{padding:15px}.metric-value{font-size:23px}
+.heading{align-items:flex-start;flex-direction:column}
+table{min-width:720px}.table-scroll{overflow:auto}
+.footer{display:block}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside>
+  <div class="brand">
+    <div class="mark">M.</div>
+    <div><strong>MORROW & CO.</strong><small>FINANCE HUB</small></div>
+  </div>
+  <div class="workspace">
+    <strong>◈ &nbsp; Morrow & Co.</strong>
+    <small>Internal Finance Workspace</small>
+  </div>
+  <div class="nav-title">WORKSPACE</div>
+  <nav id="nav"></nav>
+  <div class="sidebar-foot">
+    <div>● &nbsp; DEMO ENVIRONMENT</div>
+    <strong>Alex Morgan</strong>
+    <div style="margin-top:5px">Finance Manager · Demo</div>
+  </div>
+</aside>
+<main>
+<header>
+  <div class="crumb">Workspace &nbsp; / &nbsp; <strong id="crumb">Overview</strong></div>
+  <div class="profile">October 2026 <div class="circle">AM</div></div>
+</header>
+<div class="content" id="content"></div>
+</main>
+</div>
+
+<div class="detail" id="detail">
+<div class="drawer">
+  <div class="drawer-top">
+    <h2 id="detailTitle">Invoice details</h2>
+    <button class="btn" onclick="closeDetail()">✕</button>
+  </div>
+  <div id="detailBody"></div>
+</div>
+</div>
+
+<script>
+const NAV=[
+["Overview","▦"],["Invoices","▤"],["AI Processing","✧"],
+["Approvals","✓"],["Suppliers","▣"],["Analytics","▥"],
+["AI Benchmark","◈"],["Audit Logs","◷"]
+];
+let page="Overview",invoices=[],audit=[],bench=[],config={};
+let selected=null,search="",statusFilter="All";
+
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat("en-US",{
+  style:"currency",currency:"USD",maximumFractionDigits:0
+}).format(n||0);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",
+  '"':"&quot;","'":"&#39;"
+}[c]));
+const badge=s=>`<span class="badge ${esc(s.replaceAll(" ",""))}">${esc(s)}</span>`;
+
+async function api(url,opts={}){
+  const r=await fetch(url,{
+    ...opts,
+    headers:{"Content-Type":"application/json",...(opts.headers||{})}
+  });
+  const j=await r.json();
+  if(!r.ok)throw new Error(j.error||"Request failed");
+  return j;
+}
+async function refresh(){
+  [invoices,audit,bench,config]=await Promise.all([
+    api("/api/invoices"),api("/api/audit"),
+    api("/api/benchmark"),api("/api/config")
+  ]);
+  render();
+}
+function go(p){
+  page=p;search="";statusFilter="All";render();
+}
+function nav(){
+  $("nav").innerHTML=NAV.map(([n,icon])=>
+    `<button class="${page===n?"active":""}"
+      onclick="go('${n}')">
+      <span class="nav-icon">${icon}</span>${n}</button>`
+  ).join("");
+}
+function heading(k,title,desc,action=""){
+  return `<div class="heading"><div>
+    <div class="eyebrow">${k}</div>
+    <h1>${title}</h1><p class="subtitle">${desc}</p>
+    </div>${action}</div>`;
+}
+function metric(label,value,note,icon){
+  return `<div class="metric">
+    <span class="metric-symbol">${icon}</span>
+    <div class="metric-label">${label}</div>
+    <div class="metric-value">${value}</div>
+    <div class="metric-note">${note}</div>
+  </div>`;
+}
+function table(rows){
+  return `<div class="table-scroll"><table>
+    <thead><tr><th>SUPPLIER</th><th>INVOICE</th>
+    <th>DUE DATE</th><th>AMOUNT</th><th>STATUS</th></tr></thead>
+    <tbody>${rows.map(x=>`<tr class="clickable"
+      onclick="openDetail('${x.id}')">
+      <td><div class="vendor"><div class="vendor-icon">
+      ${esc(x.supplier[0]||"?")}</div><strong>${esc(x.supplier)}</strong></div></td>
+      <td>${esc(x.number)}</td><td>${esc(x.dueDate||"—")}</td>
+      <td><strong>${money(x.amount)}</strong></td>
+      <td>${badge(x.status)}</td>
+    </tr>`).join("")}</tbody></table>
+    ${rows.length?"":'<div class="empty">No invoices found.</div>'}
+  </div>`;
+}
+function stats(){
+  return {
+    total:invoices.length,
+    review:invoices.filter(x=>x.status==="Review Required").length,
+    approval:invoices.filter(x=>x.status==="Ready for Approval").length,
+    approved:invoices.filter(x=>x.status==="Approved").length,
+    outstanding:invoices.filter(x=>x.status!=="Approved")
+      .reduce((s,x)=>s+Number(x.amount||0),0)
+  };
+}
+function overview(){
+  const s=stats();
+  const values=[36,48,42,63,55,76];
+  return heading("FINANCIAL OPERATIONS","Good morning, Alex ✳",
+    "Here's what's happening with your accounts payable.",
+    '<button class="btn primary" onclick="go(\'AI Processing\')">＋ New invoice</button>')+
+  `<div class="metrics">
+    ${metric("Total invoices",s.total,"All recorded invoices","▤")}
+    ${metric("Pending review",s.review,"Requires attention","◷")}
+    ${metric("Awaiting approval",s.approval,"Manager action required","✓")}
+    ${metric("Outstanding value",money(s.outstanding),"Not yet approved","＄")}
+  </div>
+  <div class="grid">
+    <div class="panel">
+      <div class="panel-head"><div><h3>Invoice activity</h3>
+      <p>Illustrative monthly trend · Demo data</p></div></div>
+      <div class="chart">${values.map((v,i)=>`
+        <div class="bar-col"><div class="bar"
+        style="height:${v*2}px"></div>
+        ${["May","Jun","Jul","Aug","Sep","Oct"][i]}</div>`
+      ).join("")}</div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div><h3>Processing overview</h3>
+      <p>Live status counts from database</p></div></div>
+      ${[
+        ["Approved",s.approved],
+        ["Review Required",s.review],
+        ["Ready for Approval",s.approval]
+      ].map(([name,n])=>`
+        <div class="status-line">${name}<b>${n}</b></div>
+        <div class="progress"><div style="width:${
+          s.total?Number(n)/s.total*100:0}%"></div></div>`
+      ).join("")}
+    </div>
+  </div>
+  <div class="panel"><div class="panel-head">
+    <div><h3>Recent invoices</h3>
+    <p>Latest supplier billing activity</p></div>
+    <button class="btn" onclick="go('Invoices')">View all →</button>
+  </div>${table(invoices.slice(0,6))}</div>`;
+}
+function invoicePage(){
+  const rows=invoices.filter(x=>
+    (x.supplier+" "+x.number).toLowerCase().includes(search.toLowerCase()) &&
+    (statusFilter==="All"||x.status===statusFilter)
+  );
+  return heading("ACCOUNTS PAYABLE","Invoice management",
+    "Review, manage and track supplier invoices.",
+    `<button class="btn primary" onclick="go('AI Processing')">＋ Upload invoice</button>`)+
+    `<div class="panel"><div class="toolbar">
+    <input class="search" placeholder="Search supplier or invoice..."
+      value="${esc(search)}" oninput="search=this.value;updateTable()">
+    <select onchange="statusFilter=this.value;updateTable()">
+      ${["All","Review Required","Ready for Approval","Approved","Rejected"]
+      .map(s=>`<option ${s===statusFilter?"selected":""}>${s}</option>`).join("")}
+    </select>
+    <button class="btn" onclick="exportData('csv')">↓ Export CSV</button>
+    <button class="btn" onclick="exportData('json')">JSON</button>
+    </div><div id="invoiceTable">${table(rows)}</div></div>`;
+}
+function updateTable(){
+  const rows=invoices.filter(x=>
+    (x.supplier+" "+x.number).toLowerCase().includes(search.toLowerCase()) &&
+    (statusFilter==="All"||x.status===statusFilter)
+  );
+  $("invoiceTable").innerHTML=table(rows);
+}
+function processing(){
+  return heading("DOCUMENT INTELLIGENCE","AI document processing",
+    "Extract structured accounting fields using Vision LLM.")+
+  `<div class="grid">
+    <div class="panel" style="padding:28px">
+      <div class="upload">
+        <div class="upload-icon">✧</div>
+        <h2>Upload supplier invoice</h2>
+        <p>PDF, PNG or JPG · Maximum 10 MB</p>
+        <label class="btn primary">
+          Choose document
+          <input type="file" accept=".pdf,.png,.jpg,.jpeg"
+            onchange="upload(this)">
+        </label>
+      </div>
+      <div id="uploadStatus"></div>
+    </div>
+    <div class="panel" style="padding:28px">
+      <h3>AI extraction pipeline</h3>
+      ${[
+        ["01","Document input","PDF or invoice image"],
+        ["02","Vision LLM","gpt-4.1-mini document analysis"],
+        ["03","Structured extraction","Supplier, dates, totals, line items"],
+        ["04","Validation","Missing fields and duplicate checks"],
+        ["05","Human review","Editable fields before approval"]
+      ].map(([n,t,d])=>`
+        <div style="display:flex;gap:16px;margin:23px 0">
+          <div style="color:var(--sage);font-weight:800">${n}</div>
+          <div><strong>${t}</strong>
+          <p class="subtitle" style="margin-top:6px">${d}</p></div>
+        </div>`).join("")}
+    </div>
+  </div>
+  <div class="notice ${config.aiConfigured?"":"error"}">
+    <strong>AI Status: ${config.aiConfigured?"Configured":"API key required"}</strong>
+    <div>${config.aiConfigured?
+      "Vision LLM extraction is available.":
+      "Add OPENAI_API_KEY to .env and restart the server to activate real AI extraction."}
+    </div>
+  </div>`;
+}
+async function upload(input){
+  const file=input.files[0];
+  if(!file)return;
+  const status=$("uploadStatus");
+  status.innerHTML='<div class="notice">Processing document with AI...</div>';
+  try{
+    if(file.size>10*1024*1024)throw Error("Maximum 10 MB");
+    const base64=await new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(String(reader.result).split(",")[1]);
+      reader.onerror=reject;
+      reader.readAsDataURL(file);
+    });
+    const result=await api("/api/extract",{
+      method:"POST",
+      body:JSON.stringify({
+        name:file.name,
+        mime:file.type,
+        base64
+      })
+    });
+    await refresh();
+    go("Invoices");
+    openDetail(result.invoice.id);
+  }catch(e){
+    status.innerHTML=`<div class="notice error">${esc(e.message)}</div>`;
+  }
+}
+function approvalPage(){
+  const s=stats();
+  return heading("WORKFLOW MANAGEMENT","Approval center",
+    "Review invoices awaiting authorization.")+
+    `<div class="metrics">
+      ${metric("Awaiting approval",s.approval,"Requires decision","◷")}
+      ${metric("Approved",s.approved,"Authorized invoices","✓")}
+    </div>
+    <div class="panel"><div class="panel-head"><h3>Approval queue</h3></div>
+    ${table(invoices.filter(x=>x.status==="Ready for Approval"))}</div>`;
+}
+function supplierPage(){
+  const map=new Map();
+  invoices.forEach(x=>{
+    const v=map.get(x.supplier)||{count:0,total:0};
+    v.count++;v.total+=Number(x.amount||0);
+    map.set(x.supplier,v);
+  });
+  return heading("VENDOR DIRECTORY","Suppliers",
+    "Supplier relationships and billing overview.")+
+    `<div class="panel"><div class="panel-head"><h3>Supplier directory</h3></div>
+    <div class="table-scroll"><table>
+    <thead><tr><th>SUPPLIER</th><th>INVOICES</th><th>TOTAL BILLED</th></tr></thead>
+    <tbody>${[...map.entries()].map(([name,v])=>`
+      <tr><td><strong>${esc(name)}</strong></td>
+      <td>${v.count}</td><td>${money(v.total)}</td></tr>`
+    ).join("")}</tbody></table></div></div>`;
+}
+function analyticsPage(){
+  const map=new Map();
+  invoices.forEach(x=>map.set(x.supplier,
+    (map.get(x.supplier)||0)+Number(x.amount||0)));
+  const arr=[...map.entries()].sort((a,b)=>b[1]-a[1]);
+  const max=arr[0]?.[1]||1;
+  return heading("FINANCIAL INSIGHTS","Spend analytics",
+    "Supplier spend calculated from current invoice records.")+
+    `<div class="panel" style="padding:25px">
+    <h3>Supplier spending</h3>
+    ${arr.map(([name,value])=>`
+      <div style="margin:25px 0">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+      <strong>${esc(name)}</strong><strong>${money(value)}</strong></div>
+      <div class="progress" style="margin:0">
+      <div style="width:${value/max*100}%"></div></div></div>`
+    ).join("")}</div>`;
+}
+function benchmarkPage(){
+  return heading("AI ENGINEERING","AI benchmark",
+    "Measured extraction latency and token usage. No invented accuracy scores.")+
+    `<div class="metrics">
+    ${metric("Extraction runs",bench.length,"Actual AI requests","◈")}
+    ${metric("Avg. latency",bench.length?
+      Math.round(bench.reduce((s,x)=>s+x.latencyMs,0)/bench.length)+" ms":"—",
+      "Measured processing time","◷")}
+    </div>
+    <div class="panel"><div class="panel-head">
+      <div><h3>Extraction run history</h3>
+      <p>Accuracy requires labeled ground-truth invoices</p></div>
+    </div><div class="table-scroll"><table><thead>
+      <tr><th>MODEL</th><th>LATENCY</th><th>INPUT TOKENS</th>
+      <th>OUTPUT TOKENS</th><th>DATE</th></tr></thead>
+      <tbody>${bench.map(x=>`<tr>
+      <td>${esc(x.model)}</td><td>${x.latencyMs} ms</td>
+      <td>${x.inputTokens??"—"}</td><td>${x.outputTokens??"—"}</td>
+      <td>${esc(x.timestamp.slice(0,10))}</td></tr>`).join("")}</tbody>
+    </table></div>${bench.length?"":'<div class="empty">No AI runs yet.</div>'}</div>`;
+}
+function auditPage(){
+  return heading("ACTIVITY TRACKING","Audit logs",
+    "Recorded invoice operations and workflow transitions.")+
+    `<div class="panel"><div class="table-scroll"><table>
+    <thead><tr><th>EVENT</th><th>INVOICE ID</th><th>TIME</th></tr></thead>
+    <tbody>${audit.map(x=>`<tr><td><strong>${esc(x.action)}</strong></td>
+    <td>${esc(x.invoiceId.slice(0,8))}</td>
+    <td>${esc(x.timestamp)}</td></tr>`).join("")}</tbody>
+    </table></div>${audit.length?"":'<div class="empty">No activity yet.</div>'}</div>`;
+}
+function render(){
+  nav();$("crumb").textContent=page;
+  const views={
+    "Overview":overview,"Invoices":invoicePage,
+    "AI Processing":processing,"Approvals":approvalPage,
+    "Suppliers":supplierPage,"Analytics":analyticsPage,
+    "AI Benchmark":benchmarkPage,"Audit Logs":auditPage
+  };
+  $("content").innerHTML=views[page]()+`
+    <div class="footer"><span>© 2026 Morrow & Co.</span>
+    <span>Internal Finance Hub · Fictional portfolio demo</span></div>`;
+}
+function openDetail(id){
+  selected=invoices.find(x=>x.id===id);
+  if(!selected)return;
+  const x=selected;
+  $("detailTitle").textContent=x.number;
+  const fields=[
+    ["Supplier","supplier"],["Invoice number","number"],
+    ["Invoice date","invoiceDate"],["Due date","dueDate"],
+    ["Amount (USD)","amount"],["Currency","currency"]
+  ];
+  $("detailBody").innerHTML=`
+    <div style="margin-top:25px">${badge(x.status)}</div>
+    <p class="subtitle" style="margin-top:15px">
+      ${esc(x.source)} · ${esc(x.filename||"Demo record")}
+    </p>
+    <div class="form">${fields.map(([label,key])=>`
+      <div class="field ${key==="supplier"?"wide":""}">
+      <label>${label}</label>
+      <input id="f_${key}" value="${esc(x[key])}"
+        ${x.status==="Approved"?"disabled":""}></div>`).join("")}</div>
+    ${(x.issues||[]).map(s=>`<div class="issue">⚠ ${esc(s)}</div>`).join("")}
+    ${x.extraction?`
+      <h3 style="margin-top:25px">AI extraction result</h3>
+      <pre>${esc(JSON.stringify(x.extraction,null,2))}</pre>`:""}
+    <div class="notice">Verify extracted fields against the original
+    invoice before submitting. This demo does not store the original file.</div>
+    <div class="actions">
+      ${x.status!=="Approved"?
+        '<button class="btn" onclick="saveDetail()">Save changes</button>':""}
+      ${x.status==="Review Required"?
+        '<button class="btn primary" onclick="workflow(\'submit\')">Submit for approval</button>':""}
+      ${x.status==="Ready for Approval"?
+        '<button class="btn" onclick="workflow(\'reject\')">Reject</button>'+
+        '<button class="btn primary" onclick="workflow(\'approve\')">Approve invoice</button>':""}
+      ${x.status==="Rejected"?
+        '<button class="btn primary" onclick="workflow(\'reopen\')">Reopen</button>':""}
+    </div>`;
+  $("detail").classList.add("open");
+}
+function closeDetail(){
+  $("detail").classList.remove("open");
+  selected=null;
+}
+async function saveDetail(){
+  if(!selected)return;
+  const data={};
+  ["supplier","number","invoiceDate","dueDate","amount","currency"]
+    .forEach(k=>data[k]=$("f_"+k).value);
+  try{
+    await api("/api/invoices/"+selected.id,{
+      method:"PATCH",body:JSON.stringify(data)
+    });
+    const id=selected.id;
+    await refresh();openDetail(id);
+  }catch(e){alert(e.message)}
+}
+async function workflow(action){
+  if(!selected)return;
+  try{
+    const id=selected.id;
+    await api("/api/workflow/"+id,{
+      method:"POST",body:JSON.stringify({action})
+    });
+    await refresh();openDetail(id);
+  }catch(e){alert(e.message)}
+}
+function exportData(format){
+  const rows=invoices.filter(x=>x.status==="Approved");
+  if(!rows.length)return alert("No approved invoices.");
+  const fields=["supplier","number","invoiceDate","dueDate","amount","currency"];
+  let content,mime;
+  if(format==="json"){
+    content=JSON.stringify(rows.map(x=>Object.fromEntries(
+      fields.map(k=>[k,x[k]])
+    )),null,2);
+    mime="application/json";
+  }else{
+    const q=v=>'"'+String(v??"").replaceAll('"','""')+'"';
+    content=[fields.join(","),...rows.map(x=>fields.map(k=>q(x[k])).join(","))].join("\n");
+    mime="text/csv";
+  }
+  const u=URL.createObjectURL(new Blob([content],{type:mime}));
+  const a=document.createElement("a");
+  a.href=u;a.download="morrow-approved-invoices."+format;a.click();
+  URL.revokeObjectURL(u);
+}
+refresh().catch(e=>{
+  $("content").innerHTML=`<div class="notice error">${esc(e.message)}</div>`;
+});
+</script>
+
+<script>
+/* MORROW_OCR_WARNING_REMOVAL_V2 */
+(function () {
+  function removeWarning() {
+    const nodes = document.querySelectorAll(
+      'div, section, aside, article, p, span, small'
+    );
+
+    for (const node of nodes) {
+      const text = (node.textContent || '').trim();
+
+      if (!/AI configuration:\s*API key required/i.test(text)) {
+        continue;
+      }
+
+      // 가장 작은 경고 텍스트 요소부터 찾는다.
+      const nested = [...node.children].some(child =>
+        /AI configuration:\s*API key required/i.test(child.textContent || '')
+      );
+
+      if (nested) continue;
+
+      // 경고 문구를 감싸는 알림 박스까지만 제거한다.
+      let box = node;
+
+      for (let i = 0; i < 4 && box.parentElement; i++) {
+        const parent = box.parentElement;
+        const parentText = (parent.textContent || '').trim();
+
+        if (
+          /Configure OPENAI_API_KEY/i.test(parentText) &&
+          parentText.length < 600
+        ) {
+          box = parent;
+          break;
+        }
+
+        if (parentText.length > 600) break;
+        box = parent;
+      }
+
+      if (box !== document.body && box !== document.documentElement) {
+        box.remove();
+      }
+    }
+  }
+
+  function start() {
+    removeWarning();
+
+    const observer = new MutationObserver(() => {
+      observer.disconnect();
+      removeWarning();
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        characterData: true
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+</script>
+
+
+<script>
+/* MORROW_UPLOAD_BUTTON_FIX_V1 */
+(function () {
+  function repairUpload() {
+    const candidates = [...document.querySelectorAll('button, label, a, span, div')]
+      .filter(el => {
+        const text = (el.textContent || '').trim();
+        return text === '+ Choose document' || text === 'Choose document';
+      });
+
+    for (const target of candidates) {
+      if (target.dataset.morrowUploadFixed) continue;
+
+      const container = target.closest('form') || target.parentElement;
+      if (!container) continue;
+
+      let input = container.querySelector('input[type="file"]');
+
+      if (!input) {
+        input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.pdf,.png,.jpg,.jpeg,.webp';
+        input.style.display = 'none';
+        container.appendChild(input);
+      }
+
+      target.dataset.morrowUploadFixed = '1';
+      target.style.cursor = 'pointer';
+
+      target.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        input.click();
+      }, true);
+
+      input.addEventListener('change', function () {
+        if (!input.files.length) return;
+
+        const file = input.files[0];
+        target.textContent = file.name;
+
+        const originalInputs = [
+          ...document.querySelectorAll('input[type="file"]')
+        ].filter(x => x !== input);
+
+        if (originalInputs.length) {
+          const original = originalInputs[0];
+
+          try {
+            const transfer = new DataTransfer();
+            transfer.items.add(file);
+            original.files = transfer.files;
+            original.dispatchEvent(
+              new Event('change', { bubbles: true })
+            );
+          } catch (e) {
+            console.error('File input synchronization failed:', e);
+          }
+        }
+      });
+    }
+  }
+
+  function start() {
+    repairUpload();
+
+    const observer = new MutationObserver(() => {
+      observer.disconnect();
+      repairUpload();
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+</script>
+
+
+<script>
+/* MORROW_UPLOAD_REPAIR_FINAL */
+(() => {
+  if (window.__morrowUploadRepair) return;
+  window.__morrowUploadRepair = true;
+
+  function isFileLabel(el) {
+    return /^(?:\+\s*)?Choose document$/i.test(
+      (el.textContent || '').trim()
+    );
+  }
+
+  function setup() {
+    const candidates = [...document.querySelectorAll(
+      'button, label, a, span'
+    )].filter(isFileLabel);
+
+    for (const button of candidates) {
+      if (button.dataset.uploadRepair) continue;
+      button.dataset.uploadRepair = '1';
+
+      const region =
+        button.closest('form') ||
+        button.closest('[class*="upload"]') ||
+        button.parentElement?.parentElement ||
+        document.body;
+
+      let fileInput = region.querySelector('input[type="file"]');
+
+      if (!fileInput) {
+        fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.pdf,.png,.jpg,.jpeg,.webp';
+        fileInput.style.position = 'absolute';
+        fileInput.style.width = '1px';
+        fileInput.style.height = '1px';
+        fileInput.style.opacity = '0';
+        region.appendChild(fileInput);
+      }
+
+      button.style.cursor = 'pointer';
+
+      button.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        fileInput.click();
+      }, true);
+
+      fileInput.addEventListener('change', () => {
+        if (!fileInput.files.length) return;
+
+        const file = fileInput.files[0];
+        button.textContent = file.name;
+
+        fileInput.dispatchEvent(
+          new Event('input', { bubbles: true })
+        );
+      });
+    }
+
+    const selectedMode = [...document.querySelectorAll('select')]
+      .some(select => {
+        const option = select.selectedOptions?.[0];
+        return /OCR\s*\/\s*PDF text only/i.test(
+          option?.textContent || ''
+        );
+      });
+
+    if (selectedMode) {
+      const warningNodes = [...document.querySelectorAll(
+        'div, section, aside, p, span'
+      )].filter(el => {
+        const text = (el.textContent || '').trim();
+        return (
+          /AI configuration:\s*API key required/i.test(text) &&
+          text.length < 500
+        );
+      });
+
+      for (const node of warningNodes) {
+        if ([...node.children].some(child =>
+          /AI configuration:\s*API key required/i.test(
+            child.textContent || ''
+          )
+        )) continue;
+
+        let target = node;
+
+        for (let i = 0; i < 3; i++) {
+          const parent = target.parentElement;
+          if (!parent || parent === document.body) break;
+
+          const text = (parent.textContent || '').trim();
+          if (text.length > 500) break;
+
+          target = parent;
+        }
+
+        target.style.display = 'none';
+      }
+    }
+  }
+
+  document.addEventListener('change', setup, true);
+
+  function start() {
+    setup();
+
+    const observer = new MutationObserver(() => {
+      observer.disconnect();
+      setup();
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+</script>
+
+</body>
+</html>
