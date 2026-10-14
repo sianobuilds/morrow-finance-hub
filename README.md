@@ -1,43 +1,488 @@
-# Morrow Finance Hub
+# 💳 Morrow Finance Hub
+### AI 기반 인보이스 자동 처리 및 통합 재무 관리 플랫폼
 
-Internal Accounts Payable management demonstration for
-Morrow & Co., a fictional US lifestyle company.
+**Invoice OCR · Workflow Automation · Supplier Management · Financial Analytics**
 
-## Start
+> 복잡한 인보이스 처리 업무를 하나의 플랫폼에서 관리할 수 있도록 설계한 웹 기반 재무 운영 시스템  
+> 문서 업로드부터 OCR 정보 추출, 데이터 검증, 승인 관리, 공급업체 분석, 회계 데이터 내보내기까지 통합 지원
 
+---
+
+## 01. Project Overview
+
+### 📌 프로젝트 소개
+
+**Morrow Finance Hub**는 기업의 반복적인 인보이스 처리 업무를 효율화하기 위해 개발한 통합 재무 관리 플랫폼입니다.
+
+PDF 및 이미지 형식으로 전달되는 인보이스에서 OCR 기술을 활용하여 주요 정보를 추출하고, 추출된 데이터를 검토·수정하여 구조화된 형태로 관리할 수 있도록 구현했습니다.
+
+또한 인보이스 승인 상태 관리, 중복 청구 검증, 공급업체별 거래 현황 조회, 회계 데이터 내보내기, 재무 대시보드 등 재무 운영에 필요한 주요 기능을 하나의 웹 환경으로 통합했습니다.
+
+### 🎯 프로젝트 목표
+
+- **업무 자동화** — 반복적인 인보이스 정보 입력 및 검토 업무 감소
+- **데이터 표준화** — 비정형 PDF·이미지 문서를 구조화된 데이터로 변환
+- **검증 체계 구축** — 중복 청구 및 필수 정보 누락 여부 확인
+- **업무 가시성 확보** — 승인 현황과 공급업체별 지출 규모 통합 관리
+- **데이터 활용성 향상** — 재무 분석 및 회계 데이터 내보내기 지원
+
+---
+
+## 02. Key Features
+
+### 01 | OCR 기반 인보이스 자동 인식
+
+**Invoice OCR & Data Extraction**
+
+PDF 및 이미지 형태의 인보이스를 업로드하여 문서에 포함된 텍스트를 추출하고 주요 정보를 구조화하는 기능입니다.
+
+**주요 기능**
+
+- PDF 및 이미지 문서 업로드
+- OCR 기반 문서 텍스트 인식
+- 공급업체명 및 인보이스 번호 추출
+- 발행일 및 지급 기한 추출
+- 청구 금액 등 주요 필드 추출
+- 추출 결과 확인 및 수동 수정
+
+**처리 흐름**
+
+`문서 업로드 → 파일 분석 → OCR 텍스트 추출 → 주요 필드 파싱 → 결과 검토 → 인보이스 데이터 저장`
+
+OCR 인식 결과는 문서 품질과 레이아웃에 따라 달라질 수 있으므로, 사용자가 직접 확인하고 수정할 수 있는 검토 과정을 포함했습니다.
+
+### 02 | 인보이스 통합 관리
+
+**Invoice Management & Review**
+
+등록된 인보이스를 하나의 목록에서 확인하고 상세 정보를 검토할 수 있는 관리 기능입니다.
+
+**주요 기능**
+
+- 인보이스 목록 조회
+- 인보이스 상세 정보 확인
+- 공급업체 및 청구 금액 확인
+- 발행일 및 지급 기한 관리
+- 처리 상태별 데이터 관리
+- 추출된 인보이스 정보 수정
+- OCR 결과 및 원본 정보 비교 검토
+
+문서 인식 결과를 최종 데이터로 확정하기 전에 사용자가 검토할 수 있도록 구성하여 데이터 관리의 정확성을 높이는 데 중점을 두었습니다.
+
+### 03 | 승인 워크플로우 및 자동화 규칙
+
+**Approval Workflow & Validation Rules**
+
+인보이스의 처리 상태를 관리하고 반복적인 검증 업무를 지원하는 기능입니다.
+
+**주요 기능**
+
+- 승인 대기 인보이스 조회
+- 승인 완료 인보이스 관리
+- 인보이스 상태별 구분
+- 중복 인보이스 검증
+- 필수 입력 항목 누락 확인
+- 자동화 규칙 설정 인터페이스 제공
+
+**검증 항목 예시**
+
+| 검증 항목 | 목적 |
+|---|---|
+| 중복 청구 검사 | 동일 인보이스의 중복 등록 방지 |
+| 필수 항목 검증 | 주요 정보 누락 여부 확인 |
+| 승인 상태 관리 | 처리 단계별 업무 현황 파악 |
+| 승인 금액 조건 | 금액 기준 자동화 규칙 설정을 위한 구성 |
+
+**구현 범위 안내**
+
+중복 및 필수 항목 검증 기능을 제공하며, 조건별 승인 라우팅 등 일부 고급 자동화 규칙은 확장 예정 기능으로 구분합니다.
+
+### 04 | 공급업체 및 회계 데이터 관리
+
+**Supplier Management & Accounting**
+
+공급업체별 거래 정보를 통합 조회하고 회계 데이터 활용을 지원하는 기능입니다.
+
+**주요 기능**
+
+- 공급업체 목록 조회
+- 공급업체별 인보이스 정보 확인
+- 공급업체별 누적 청구액 집계
+- 거래 규모 비교
+- 회계 계정과목 구조 확인
+- 회계 데이터 CSV 내보내기
+
+공급업체와 인보이스 데이터를 연계하여 거래 현황을 파악하고, 내보내기 기능을 통해 후속 회계 업무에서 활용할 수 있도록 구성했습니다.
+
+회계 화면의 계정과목 구성은 예시 데이터를 포함하며, 영구적인 원장 매핑 및 외부 회계 시스템 자동 연동은 향후 확장 범위입니다.
+
+### 05 | 재무 분석 및 운영 모니터링
+
+**Financial Analytics & Monitoring**
+
+인보이스 데이터를 기반으로 재무 운영 현황을 시각화하고 주요 관리 지표를 확인할 수 있는 기능입니다.
+
+**주요 기능**
+
+- 전체 인보이스 현황 요약
+- 승인 대기 및 완료 상태 확인
+- 공급업체별 누적 청구 금액 분석
+- 주요 재무 지표 시각화
+- 인보이스 처리 활동 확인
+- 분석 및 운영 관리 화면 제공
+
+사용자는 여러 관리 화면을 개별적으로 확인하지 않고도 재무 운영에 필요한 핵심 정보를 파악할 수 있습니다.
+
+---
+
+## 03. System Architecture
+
+### 🏗️ 시스템 구성
+
+Morrow Finance Hub는 웹 프론트엔드, Node.js 기반 서버, OCR 처리 모듈, 인보이스 데이터 관리 기능으로 구성됩니다.
+
+```text
+┌───────────────────────────────────────────┐
+│               Web Client                  │
+│                                           │
+│  Dashboard / Invoices / Approvals          │
+│  Suppliers / Accounting / Analytics        │
+└─────────────────────┬─────────────────────┘
+                      │
+                      ▼
+┌───────────────────────────────────────────┐
+│               Node.js Server              │
+│                                           │
+│  API Requests / Business Logic             │
+│  Invoice Management / Validation           │
+└───────────────┬───────────────────────────┘
+                │
+        ┌───────┴────────┐
+        ▼                ▼
+┌────────────────┐  ┌──────────────────────┐
+│ OCR Processing │  │ Invoice Data         │
+│                │  │                      │
+│ Tesseract      │  │ Structured JSON      │
+│ PDF.js         │  │ Invoice Records      │
+│ Text Parsing   │  │ Supplier Information │
+└────────────────┘  └──────────────────────┘
+```
+
+### 주요 모듈
+
+| 모듈 | 역할 |
+|---|---|
+| Web Interface | 인보이스 및 재무 관리 화면 제공 |
+| API Server | 클라이언트 요청 및 업무 로직 처리 |
+| OCR Engine | 이미지 및 PDF 문서의 텍스트 인식 |
+| Data Parser | OCR 결과에서 주요 인보이스 필드 추출 |
+| Validation | 중복 등록 및 필수 항목 검증 |
+| Invoice Management | 인보이스 데이터와 처리 상태 관리 |
+| Supplier Management | 공급업체별 거래 데이터 집계 |
+| Accounting Export | 회계 데이터 CSV 내보내기 |
+| Analytics | 재무 운영 지표 집계 및 시각화 |
+
+---
+
+## 04. Technology Stack
+
+### 🛠️ 주요 기술
+
+| 구분 | 기술 | 활용 |
+|---|---|---|
+| Backend | Node.js | 웹 서버 및 API 처리 |
+| Frontend | HTML, CSS, JavaScript | 사용자 인터페이스 및 화면 동작 |
+| OCR | Tesseract | 문서 내 문자 인식 |
+| PDF Processing | pdfjs-dist | PDF 문서 처리 |
+| Data | JSON | 인보이스 데이터 관리 |
+| Export | CSV | 회계 데이터 내보내기 |
+| Version Control | Git, GitHub | 소스 코드 버전 관리 |
+
+### 기술 설계 방향
+
+**Document-Centric Processing**
+
+- 비정형 문서의 정보를 구조화된 데이터로 전환
+- 문서 인식과 데이터 검토 과정을 연결
+- 추출 결과를 수정 가능한 형태로 제공
+
+**Modular Workflow**
+
+- 문서 처리, 검증, 승인, 공급업체 관리 기능 분리
+- 업무 단계별 상태 확인
+- 기능 확장을 고려한 모듈 구성
+
+**Data Visibility**
+
+- 재무 데이터를 단일 웹 인터페이스에서 확인
+- 공급업체별 거래 데이터 집계
+- 운영 지표의 시각적 표현
+
+---
+
+## 05. OCR Processing Pipeline
+
+### 📄 인보이스 문서 처리 과정
+
+**Step 01 — Document Upload**
+
+PDF 또는 이미지 형태의 인보이스를 업로드합니다.
+
+**Step 02 — Document Processing**
+
+업로드된 파일 형식에 따라 문서 처리 및 텍스트 추출을 수행합니다.
+
+**Step 03 — OCR Recognition**
+
+Tesseract 기반 OCR 처리로 문서에 포함된 텍스트를 인식합니다.
+
+**Step 04 — Field Extraction**
+
+추출된 텍스트를 분석하여 공급업체명, 청구번호, 날짜 및 금액 등의 주요 정보를 파싱합니다.
+
+**Step 05 — Validation & Review**
+
+필수 항목 누락과 중복 여부를 확인하고, 사용자가 추출 결과를 검토·수정합니다.
+
+**Step 06 — Structured Storage**
+
+검토된 데이터를 구조화된 인보이스 정보로 관리합니다.
+
+### OCR 처리 시 고려사항
+
+- 다양한 인보이스 문서 레이아웃
+- 이미지 해상도 및 문서 품질
+- 날짜 및 통화 표기 방식의 차이
+- 공급업체별 문서 양식 차이
+- OCR 인식 오류에 따른 수동 검토 필요성
+
+본 프로젝트는 OCR 결과를 무조건 확정하는 방식보다 **자동 추출과 사용자 검토를 결합하는 방식**에 중점을 두었습니다.
+
+---
+
+## 06. Data Management
+
+### 📂 주요 데이터 구조
+
+인보이스 데이터는 문서 정보와 처리 상태를 중심으로 관리합니다.
+
+**Invoice 데이터 예시**
+
+```json
+{
+  "invoiceNumber": "INV-2026-001",
+  "supplier": "Sample Supplier",
+  "issueDate": "2026-10-01",
+  "dueDate": "2026-10-15",
+  "amount": 1250.00,
+  "currency": "USD",
+  "status": "pending"
+}
+```
+
+위 JSON은 데이터 구조를 설명하기 위한 예시이며, 실제 저장 파일의 전체 스키마를 의미하지 않습니다.
+
+### 데이터 관리 원칙
+
+- 인보이스 번호를 통한 문서 식별
+- 공급업체 정보와 인보이스 데이터 연계
+- 금액 및 날짜 정보의 일관성 확인
+- 처리 상태를 통한 업무 진행 현황 관리
+- CSV 내보내기를 통한 데이터 활용 지원
+
+---
+
+## 07. User Workflow
+
+### 🔄 주요 사용자 이용 흐름
+
+```text
+[1] 인보이스 파일 업로드
+            ↓
+[2] OCR 기반 텍스트 추출
+            ↓
+[3] 핵심 정보 구조화
+            ↓
+[4] 추출 결과 확인 및 수정
+            ↓
+[5] 필수 항목 및 중복 검증
+            ↓
+[6] 인보이스 저장 및 상태 관리
+            ↓
+[7] 승인 현황 확인
+            ↓
+[8] 공급업체별 거래 내역 조회
+            ↓
+[9] 재무 분석 및 회계 데이터 내보내기
+```
+
+**핵심 설계 목표**
+
+문서 업로드부터 후속 재무 관리까지의 흐름을 단일 웹 플랫폼에서 처리할 수 있도록 사용자 경험을 구성했습니다.
+
+---
+
+## 08. Getting Started
+
+### 💻 실행 환경
+
+- macOS, Windows 또는 Linux
+- Node.js
+- npm
+- 웹 브라우저
+
+### 1. 저장소 복제
+
+```bash
+git clone https://github.com/sianobuilds/morrow-finance-hub.git
+cd morrow-finance-hub
+```
+
+### 2. 의존성 설치
+
+```bash
+npm install
+```
+
+### 3. 애플리케이션 실행
+
+```bash
 npm start
+```
 
-Open http://localhost:3067
+`npm start` 명령은 프로젝트의 `package.json`에 start 스크립트가 정의된 경우 사용할 수 있습니다.
 
-## AI
+### 4. 브라우저 접속
 
-Create a .env file:
+```text
+http://localhost:3067
+```
 
-OPENAI_API_KEY=your_key_here
+### 5. 로컬 실행 확인
 
-The start script loads the key before launching Node.js.
+```bash
+curl http://localhost:3067
+```
 
-The OpenAI Responses API extracts structured invoice fields
-from PDF, PNG and JPG files.
+서버가 정상 실행되면 브라우저에서 Morrow Finance Hub 인터페이스를 확인할 수 있습니다.
 
-## Features
+---
 
-- Finance dashboard
-- Invoice management
-- Vision LLM extraction
-- Invoice validation and duplicate detection
-- Human review and approval workflow
-- Supplier analytics
-- Actual extraction latency and token tracking
-- Audit history
-- Approved invoice CSV/JSON export
+## 09. Project Structure
 
-## Limitations
+### 📁 프로젝트 구성 개요
 
-This is a local portfolio demonstration.
-Authentication, role-based access control, durable original
-document storage, production-grade accounting integration,
-and labeled accuracy benchmarking are not implemented.
+```text
+morrow-finance-hub/
+│
+├── Frontend
+│   ├── Dashboard UI
+│   ├── Invoice Management UI
+│   ├── Approval Management UI
+│   ├── Supplier Management UI
+│   ├── Accounting UI
+│   └── Analytics UI
+│
+├── Backend
+│   ├── Node.js Server
+│   ├── API Handlers
+│   ├── OCR Processing
+│   ├── Validation Logic
+│   └── Data Management
+│
+├── Data
+│   └── Invoice JSON Records
+│
+├── package.json
+└── README.md
+```
 
-Never use real confidential financial documents in this
-development environment without appropriate security controls.
+위 구조는 기능별 논리 구성도이며, 실제 저장소의 디렉터리 및 파일명과는 다를 수 있습니다.
+
+---
+
+## 10. Development Highlights
+
+### ✨ 주요 개발 내용
+
+**01. 비정형 문서 데이터 구조화**
+
+PDF 및 이미지 형태의 인보이스를 OCR로 처리하여 재무 관리에 필요한 핵심 데이터를 추출하도록 구현했습니다.
+
+**02. 추출 결과 검토 프로세스**
+
+OCR 인식 결과의 오류 가능성을 고려하여 사용자가 데이터를 직접 확인하고 수정할 수 있는 인터페이스를 구성했습니다.
+
+**03. 인보이스 검증 로직**
+
+중복 청구 및 필수 항목 누락 여부를 확인하는 검증 기능을 통해 데이터 등록 과정의 신뢰성을 높이고자 했습니다.
+
+**04. 재무 업무 통합 인터페이스**
+
+인보이스, 승인, 공급업체, 회계 및 분석 화면을 하나의 웹 애플리케이션으로 구성했습니다.
+
+**05. 재무 데이터 활용성 확대**
+
+공급업체별 청구 금액 집계, 분석 화면 및 CSV 내보내기를 통해 후속 재무 업무에 활용할 수 있도록 설계했습니다.
+
+---
+
+## 11. Implementation Status
+
+### ✅ 구현 기능과 확장 예정 기능
+
+| 기능 | 구분 |
+|---|---|
+| 인보이스 업로드 및 OCR 텍스트 추출 | 구현 |
+| 주요 인보이스 필드 파싱 | 구현 |
+| 인보이스 목록 및 상세 정보 관리 | 구현 |
+| OCR 추출 결과 검토 및 수정 | 구현 |
+| 중복 인보이스 검증 | 구현 |
+| 필수 항목 누락 검증 | 구현 |
+| 승인 상태 관리 화면 | 구현 |
+| 자동화 규칙 설정 인터페이스 | 구현 |
+| 공급업체별 청구액 집계 | 구현 |
+| 회계 데이터 CSV 내보내기 | 구현 |
+| 재무 분석 대시보드 | 구현 |
+| 조건별 자동 승인 라우팅 | 확장 예정 |
+| 영구적인 회계 원장 매핑 | 확장 예정 |
+| 외부 회계 시스템 자동 연동 | 확장 예정 |
+| OCR 인식 정확도 고도화 | 개선 과제 |
+
+> 현재 구현된 기능과 향후 개발 예정 기능을 구분하여 기술했습니다. 일부 화면은 시연용 데이터를 사용합니다.
+
+---
+
+## 12. Future Improvements
+
+### 🚀 향후 개선 방향
+
+**OCR 정확도 및 문서 대응 범위 개선**
+
+- 다양한 공급업체의 인보이스 양식 대응
+- 날짜 및 금액 추출 로직 개선
+- OCR 결과 검증 체계 고도화
+
+**승인 업무 자동화 확장**
+
+- 금액 조건에 따른 승인 규칙 실행
+- 담당자별 승인 라우팅
+- 승인 단계 및 이력 관리 고도화
+
+**회계 데이터 연동 확장**
+
+- 계정과목 매핑 기능 고도화
+- 외부 회계 시스템 연동
+- 데이터 내보내기 형식 확장
+
+**재무 분석 기능 고도화**
+
+- 기간별 거래 추이 분석
+- 공급업체별 지출 비교
+- 추가 재무 지표 및 리포트 기능 개발
+
+**서비스 운영 환경 개선**
+
+- 데이터 저장 구조 고도화
+- 사용자 권한 및 접근 제어
+- 운영
